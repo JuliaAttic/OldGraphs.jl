@@ -1,0 +1,147 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Main Features &mdash; Graphs.jl 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="next" title="Generic Interfaces" href="interface.html" />
+    <link rel="prev" title="Welcome to Graphs.jl’s documentation!" href="index.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="interface.html" title="Generic Interfaces"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Graphs.jl’s documentation!"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="index.html"
+                        title="previous chapter">Welcome to Graphs.jl&#8217;s documentation!</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="interface.html"
+                        title="next chapter">Generic Interfaces</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/overview.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="main-features">
+<h1>Main Features<a class="headerlink" href="#main-features" title="Permalink to this headline">¶</a></h1>
+<p>An important aspect of <em>Graphs.jl</em> is the generic abstraction of graph concepts expressed via standardized interfaces, which allows access to a graph&#8217;s structure while hiding the implementation details. This encourages reuse of data structures and algorithms. In particular, one can write generic graph algorithms that can be applied to different graph types as long as they implement the required interface.</p>
+<p>In addition to the generic abstraction, there are other important features:</p>
+<ul>
+<li><dl class="first docutils">
+<dt>A variety of graph types tailored to different purposes</dt>
+<dd><ul class="first last simple">
+<li>generic adjacency list</li>
+<li>generic incidence list</li>
+<li>a simple graph type with compact and efficient representation</li>
+<li>an extended graph type that supports labels and attributes</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><dl class="first docutils">
+<dt>A collection of graph algorithms:</dt>
+<dd><ul class="first last simple">
+<li>graph traversal with visitor support: BFS, DFS</li>
+<li>cycle detection</li>
+<li>connected components</li>
+<li>topological sorting</li>
+<li>shortest paths: Dijkstra, Floyd-Warshall</li>
+<li>minimum spanning trees: Prim, Kruskal</li>
+<li>more algorithms are being implemented</li>
+</ul>
+</dd>
+</dl>
+</li>
+<li><p class="first">Matrix-based characterization: adjacency matrix, weight matrix, Laplacian matrix</p>
+</li>
+<li><p class="first">All data structures and algorithms are implemented in <em>pure Julia</em>, and thus they are portable.</p>
+</li>
+<li><p class="first">We paid special attention to the runtime performance. Many of the algorithms are very efficient. For example, a benchmark shows that it takes about <em>15 milliseconds</em> to run the Dijkstra&#8217;s algorithm over a graph with <em>10 thousand</em> vertices and <em>1 million</em>  edges on a macbook pro.</p>
+</li>
+</ul>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="interface.html" title="Generic Interfaces"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="index.html" title="Welcome to Graphs.jl’s documentation!"
+             >previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dahua Lin.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

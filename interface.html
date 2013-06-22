@@ -1,0 +1,320 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Generic Interfaces &mdash; Graphs.jl 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="next" title="Vertices and Edges" href="vertex_edge.html" />
+    <link rel="prev" title="Main Features" href="overview.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="vertex_edge.html" title="Vertices and Edges"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Main Features"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Generic Interfaces</a><ul>
+<li><a class="reference internal" href="#basic-interface">Basic interface</a></li>
+<li><a class="reference internal" href="#vertex-list-interface">Vertex List interface</a></li>
+<li><a class="reference internal" href="#edge-list-interface">Edge List interface</a></li>
+<li><a class="reference internal" href="#vertex-map-interface">Vertex Map interface</a></li>
+<li><a class="reference internal" href="#edge-map-interface">Edge Map interface</a></li>
+<li><a class="reference internal" href="#adjacency-list-interface">Adjacency List interface</a></li>
+<li><a class="reference internal" href="#incidence-list-interface">Incidence List interface</a></li>
+<li><a class="reference internal" href="#bidirectional-incidence-list-interface">Bidirectional Incidence List interface</a></li>
+<li><a class="reference internal" href="#interface-declaration-and-verification">Interface declaration and verification</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="overview.html"
+                        title="previous chapter">Main Features</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="vertex_edge.html"
+                        title="next chapter">Vertices and Edges</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/interface.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="generic-interfaces">
+<h1>Generic Interfaces<a class="headerlink" href="#generic-interfaces" title="Permalink to this headline">¶</a></h1>
+<p>In <em>Graphs.jl</em>, the graph concepts are abstracted into a set of generic interfaces. Below is a detailed specification. We <em>strongly</em> recommend reading through this specification before you write a graph type to ensure that your graph type conforms to the interface system.</p>
+<div class="section" id="basic-interface">
+<h2>Basic interface<a class="headerlink" href="#basic-interface" title="Permalink to this headline">¶</a></h2>
+<p>All graph types should be declared as a sub-type of <tt class="docutils literal"><span class="pre">AbstractGraph{V,E}</span></tt>, where <tt class="docutils literal"><span class="pre">V</span></tt> is the vertex type, and <tt class="docutils literal"><span class="pre">E</span></tt> is the edge type.</p>
+<p>The following two functions are provided for graphs of all types.</p>
+<dl class="function">
+<dt id="vertex_type">
+<tt class="descname">vertex_type</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#vertex_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the vertex type of a graph, <em>i.e.</em>, <tt class="docutils literal"><span class="pre">V</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="edge_type">
+<tt class="descname">edge_type</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#edge_type" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the edge type of a graph, <em>i.e.</em>, <tt class="docutils literal"><span class="pre">E</span></tt>.</p>
+</dd></dl>
+
+<p><strong>Note:</strong> The two basic functions above have been implemented over <tt class="docutils literal"><span class="pre">AbstractGraph</span></tt> and one need not implement them for specific graph types.</p>
+<p>In addition, the following method needs to be implemented for each graph type:</p>
+<dl class="function">
+<dt id="is_directed">
+<tt class="descname">is_directed</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#is_directed" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns whether <tt class="docutils literal"><span class="pre">g</span></tt> is a directed graph.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="vertex-list-interface">
+<h2>Vertex List interface<a class="headerlink" href="#vertex-list-interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="num_vertices">
+<tt class="descname">num_vertices</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#num_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of vertices contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vertices">
+<tt class="descname">vertices</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an iterable view/container of all vertices.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="edge-list-interface">
+<h2>Edge List interface<a class="headerlink" href="#edge-list-interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="num_edges">
+<tt class="descname">num_edges</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#num_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of edges contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="edges">
+<tt class="descname">edges</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an iterable view/container of all edges.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="source">
+<tt class="descname">source</tt><big>(</big><em>e</em>, <em>g</em><big>)</big><a class="headerlink" href="#source" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the source vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="target">
+<tt class="descname">target</tt><big>(</big><em>e</em>, <em>g</em><big>)</big><a class="headerlink" href="#target" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the target vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="vertex-map-interface">
+<h2>Vertex Map interface<a class="headerlink" href="#vertex-map-interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="vertex_index">
+<tt class="descname">vertex_index</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#vertex_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the index of a vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="edge-map-interface">
+<h2>Edge Map interface<a class="headerlink" href="#edge-map-interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="edge_index">
+<tt class="descname">edge_index</tt><big>(</big><em>e</em>, <em>g</em><big>)</big><a class="headerlink" href="#edge_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the index of a vertex <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="adjacency-list-interface">
+<h2>Adjacency List interface<a class="headerlink" href="#adjacency-list-interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt id="out_degree">
+<tt class="descname">out_degree</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#out_degree" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of outgoing neighbors from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="out_neighbors">
+<tt class="descname">out_neighbors</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#out_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an iterable view/container of all outgoing neighbors of vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<p>The following example prints all vertices of a graph as well as its neighbors</p>
+<div class="highlight-python"><pre>for u in vertices(g)
+    print("$u: ")
+    for v in out_neighbors(u, g)
+        println("$v ")
+    end
+    println()
+end</pre>
+</div>
+</div>
+<div class="section" id="incidence-list-interface">
+<h2>Incidence List interface<a class="headerlink" href="#incidence-list-interface" title="Permalink to this headline">¶</a></h2>
+<dl class="function">
+<dt>
+<tt class="descname">out_degree</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the number of outgoing edges from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="out_edges">
+<tt class="descname">out_edges</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#out_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of outgoing edges from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">source</tt><big>(</big><em>e</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the source vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">target</tt><big>(</big><em>e</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the target vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<p>The following example prints all vertices of a graph as well as its incidence edges</p>
+<div class="highlight-python"><pre>for u in vertices(g)
+    print("$u: ")
+    for e in out_edges(u, g)
+        v = target(e, g)
+        println("($u -- $v) ")
+    end
+    println()
+end</pre>
+</div>
+</div>
+<div class="section" id="bidirectional-incidence-list-interface">
+<h2>Bidirectional Incidence List interface<a class="headerlink" href="#bidirectional-incidence-list-interface" title="Permalink to this headline">¶</a></h2>
+<p>This interface refines the <tt class="docutils literal"><span class="pre">Incidence</span> <span class="pre">List</span></tt> and requires the implementation of two additional methods:</p>
+<dl class="function">
+<dt id="in_degree">
+<tt class="descname">in_degree</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#in_degree" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of incoming edges from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="in_edges">
+<tt class="descname">in_edges</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#in_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of incoming edges from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="interface-declaration-and-verification">
+<h2>Interface declaration and verification<a class="headerlink" href="#interface-declaration-and-verification" title="Permalink to this headline">¶</a></h2>
+<p>It is important to note that a specific graph type can implement multiple interfaces. If a method is required to be implemented for two interfaces (<em>e.g.</em>, <tt class="docutils literal"><span class="pre">out_degree</span></tt> in both adjacency list an incidence list), this method need only be implemented once.</p>
+<p>Julia does not provide a builtin mechanism for interface declaration. To declare that a specific graph type implements certain interfaces, one can use the macro <tt class="docutils literal"><span class="pre">&#64;graph_implements</span></tt>. For example, to declare that a graph type <tt class="docutils literal"><span class="pre">G</span></tt> implements vertex list and adjacency list, one can write:</p>
+<div class="highlight-python"><pre>@graph_implements G vertex_list adjacency_list</pre>
+</div>
+<p>This statement instantiates the following methods:</p>
+<div class="highlight-python"><pre>implements_vertex_list(::G) = true
+implements_adjacency_list(::G) = true</pre>
+</div>
+<p>The following is a list of supported interface names</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">vertex_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">edge_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">vertex_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">edge_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">adjacency_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">incidence_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">bidirectional_adjacency_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">bidirectional_incidence_list</span></tt></li>
+</ul>
+<p>In a function that implements a generic graph algorithm, one can use the macro <tt class="docutils literal"><span class="pre">&#64;graph_requires</span></tt> to verify whether the input graph implements the required interfaces. A typical graph algorithm function may look like follows</p>
+<div class="highlight-python"><pre>function myfunc(g::AbstractGraph, params)
+    @graph_requires g vertex_list adjacency_list
+    ...
+end</pre>
+</div>
+<p>Here, the <tt class="docutils literal"><span class="pre">&#64;graph_requires</span></tt> statement checks whether the graph <tt class="docutils literal"><span class="pre">g</span></tt> implements the interfaces for <tt class="docutils literal"><span class="pre">vertex_list</span></tt> and <tt class="docutils literal"><span class="pre">adjacency_list</span></tt>, and throws exceptions if <tt class="docutils literal"><span class="pre">g</span></tt> does not satisfy the requirements.</p>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="vertex_edge.html" title="Vertices and Edges"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="overview.html" title="Main Features"
+             >previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dahua Lin.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

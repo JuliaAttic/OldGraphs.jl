@@ -1,0 +1,482 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graph Types &mdash; Graphs.jl 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="next" title="Graph Algorithms" href="algorithms.html" />
+    <link rel="prev" title="Vertices and Edges" href="vertex_edge.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="algorithms.html" title="Graph Algorithms"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="vertex_edge.html" title="Vertices and Edges"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Graph Types</a><ul>
+<li><a class="reference internal" href="#adjacency-list">Adjacency List</a></li>
+<li><a class="reference internal" href="#incidence-list">Incidence List</a></li>
+<li><a class="reference internal" href="#graph">Graph</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="vertex_edge.html"
+                        title="previous chapter">Vertices and Edges</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="algorithms.html"
+                        title="next chapter">Graph Algorithms</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/graphs.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="graph-types">
+<h1>Graph Types<a class="headerlink" href="#graph-types" title="Permalink to this headline">¶</a></h1>
+<p>This package provides several graph types that implement different subsets of interfaces.
+In particular, it has three graph types:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">GenericAdjacencyList</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">GenericIncidenceList</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">GenericGraph</span></tt></li>
+</ul>
+<p>All of these types of parametric types. One can easily derive customized graph types using different type parameters.</p>
+<div class="section" id="adjacency-list">
+<h2>Adjacency List<a class="headerlink" href="#adjacency-list" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">GenericAdjacencyList</span></tt> implements the adjacency list representation of a graph, where each vertex maintains a list of neighbors (<em>i.e.</em> adjacent vertices).</p>
+<p>Here is the definition of <tt class="docutils literal"><span class="pre">GenericAdjacencyList</span></tt>:</p>
+<div class="highlight-python"><pre>type GenericAdjacencyList{V, VList, AdjList} &lt;: AbstractGraph{V, Edge{V}}</pre>
+</div>
+<p>It has three type parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">V</span></tt>: the vertex type</li>
+<li><tt class="docutils literal"><span class="pre">VList</span></tt>: the type of vertex list</li>
+<li><tt class="docutils literal"><span class="pre">AdjList</span></tt>: the type of the adjacency list. Let <tt class="docutils literal"><span class="pre">a</span></tt> be an instance of <tt class="docutils literal"><span class="pre">AdjList</span></tt>, and <tt class="docutils literal"><span class="pre">i</span></tt> be the index of a vertex, then <tt class="docutils literal"><span class="pre">a[i]</span></tt> must be an iterable container of the neighbors.</li>
+</ul>
+<p>The package defines following aliases for convenience:</p>
+<div class="highlight-python"><pre>typealias SimpleAdjacencyList GenericAdjacencyList{Int, Range1{Int}, Vector{Vector{Int}}}
+typealias AdjacencyList{V} GenericAdjacencyList{V, Vector{V}, Vector{Vector{V}}}</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">GenericAdjacencyList</span></tt> implements the following interfaces</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">vertex_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">vertex_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">adjacency_list</span></tt></li>
+</ul>
+<p>Specially, it implements the following methods:</p>
+<dl class="function">
+<dt id="is_directed">
+<tt class="descname">is_directed</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#is_directed" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns whether <tt class="docutils literal"><span class="pre">g</span></tt> is a directed graph.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="num_vertices">
+<tt class="descname">num_vertices</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#num_vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of vertices contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vertices">
+<tt class="descname">vertices</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#vertices" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an iterable view/container of all vertices.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="num_edges">
+<tt class="descname">num_edges</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#num_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of edges contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="vertex_index">
+<tt class="descname">vertex_index</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#vertex_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the index of a vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="out_degree">
+<tt class="descname">out_degree</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#out_degree" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of outgoing neighbors from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="out_neighbors">
+<tt class="descname">out_neighbors</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#out_neighbors" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an iterable view/container of all outgoing neighbors of vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<p>In addition, it implements following methods for construction:</p>
+<dl class="function">
+<dt id="simple_adjlist">
+<tt class="descname">simple_adjlist</tt><big>(</big><em>nv</em><span class="optional">[</span>, <em>is_directed=true</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#simple_adjlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructs a simple adjacency list with <tt class="docutils literal"><span class="pre">nv</span></tt> vertices and no edges (initially).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="adjlist">
+<tt class="descname">adjlist</tt><big>(</big><em>V</em><span class="optional">[</span>, <em>is_directed=true</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#adjlist" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructs an empty adjacency list of vertex type <tt class="docutils literal"><span class="pre">V</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_vertex!(g, v)</tt></dt>
+<dd><p>adds a vertex <tt class="docutils literal"><span class="pre">v</span></tt>. This function applies only to graph of type <tt class="docutils literal"><span class="pre">AdjacencyList</span></tt>.
+It returns the added vertex.</p>
+<p>If the vertex type is <tt class="docutils literal"><span class="pre">KeyVertex{K}</span></tt>, then the second argument here can be the key value, and the function will constructs a vertex and assigns an index.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_edge!(g, u, v)</tt></dt>
+<dd><p>adds an edge between u and v, such that <tt class="docutils literal"><span class="pre">v</span></tt> becomes an outgoing neighbor of <tt class="docutils literal"><span class="pre">u</span></tt>. If <tt class="docutils literal"><span class="pre">g</span></tt> is undirected, then <tt class="docutils literal"><span class="pre">u</span></tt> is also added to the neighbor list of <tt class="docutils literal"><span class="pre">v</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="incidence-list">
+<h2>Incidence List<a class="headerlink" href="#incidence-list" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">GenericIncidenceList</span></tt> implements the incidence list representation of a graph, where each vertex maintains a list of outgoing edges.</p>
+<p>Here is the definition of <tt class="docutils literal"><span class="pre">GenericIncidenceList</span></tt>:</p>
+<div class="highlight-python"><pre>type GenericIncidenceList{V, E, VList, IncList} &lt;: AbstractGraph{V, E}</pre>
+</div>
+<p>It has four type parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">V</span></tt>: the vertex type</li>
+<li><tt class="docutils literal"><span class="pre">E</span></tt>: the edge type</li>
+<li><tt class="docutils literal"><span class="pre">VList</span></tt>: the type of vertex list</li>
+<li><tt class="docutils literal"><span class="pre">IncList</span></tt>: the type of incidence list. Let <tt class="docutils literal"><span class="pre">a</span></tt> be such a list, then <tt class="docutils literal"><span class="pre">a[i]</span></tt> should be an iterable container of edges.</li>
+</ul>
+<p>The package defines following aliases for convenience:</p>
+<div class="highlight-python"><pre>typealias SimpleIncidenceList GenericIncidenceList{Int, IEdge, Range1{Int}, Vector{Vector{IEdge}}}
+typealias IncidenceList{V} GenericIncidenceList{V, Edge{V}, Vector{V}, Vector{Vector{Edge{V}}}}</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">GenericIncidenceList</span></tt> implements the following interfaces:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">vertex_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">vertex_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">edge_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">adjacency_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">incidence_list</span></tt></li>
+</ul>
+<p>Specially, it implements the following methods:</p>
+<dl class="function">
+<dt>
+<tt class="descname">is_directed</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns whether <tt class="docutils literal"><span class="pre">g</span></tt> is a directed graph.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">num_vertices</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns the number of vertices contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">vertices</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns an iterable view/container of all vertices.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">num_edges</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns the number of edges contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">vertex_index</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the index of a vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt id="edge_index">
+<tt class="descname">edge_index</tt><big>(</big><em>e</em>, <em>g</em><big>)</big><a class="headerlink" href="#edge_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the index of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="source">
+<tt class="descname">source</tt><big>(</big><em>e</em>, <em>g</em><big>)</big><a class="headerlink" href="#source" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the source vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="target">
+<tt class="descname">target</tt><big>(</big><em>e</em>, <em>g</em><big>)</big><a class="headerlink" href="#target" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the target vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">out_degree</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the number of outgoing neighbors from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="out_edges">
+<tt class="descname">out_edges</tt><big>(</big><em>v</em>, <em>g</em><big>)</big><a class="headerlink" href="#out_edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the number of outgoing edges from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">out_neighbors</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns an iterable view/container of all outgoing neighbors of vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+<p><strong>Note:</strong> <tt class="docutils literal"><span class="pre">out_neighbors</span></tt> here is implemented based on <tt class="docutils literal"><span class="pre">out_edges</span></tt> via a proxy type. Therefore, it may be less efficient than the counterpart for <tt class="docutils literal"><span class="pre">GenericAdjacencyList</span></tt>.</p>
+</dd></dl>
+
+<p>In addition, it implements following methods for construction:</p>
+<dl class="function">
+<dt id="simple_inclist">
+<tt class="descname">simple_inclist</tt><big>(</big><em>nv</em><span class="optional">[</span>, <em>is_directed=true</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#simple_inclist" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructs a simple incidence list with <tt class="docutils literal"><span class="pre">nv</span></tt> vertices and no edges (initially).</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="inclist">
+<tt class="descname">inclist</tt><big>(</big><em>V</em><span class="optional">[</span>, <em>is_directed=true</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#inclist" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructs an empty incidence list of vertex type <tt class="docutils literal"><span class="pre">V</span></tt>. The edge type is <tt class="docutils literal"><span class="pre">Edge{V}</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_vertex!(g, v)</tt></dt>
+<dd><p>adds a vertex <tt class="docutils literal"><span class="pre">v</span></tt>. This function applies only to graph of type <tt class="docutils literal"><span class="pre">AdjacencyList</span></tt>.
+It returns the added vertex.</p>
+<p>If the vertex type is <tt class="docutils literal"><span class="pre">KeyVertex{K}</span></tt>, then the second argument here can be the key value, and the function will constructs a vertex and assigns an index.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_edge!(g, u, v)</tt></dt>
+<dd><p>adds an edge between u and v, such that <tt class="docutils literal"><span class="pre">v</span></tt> becomes an outgoing neighbor of <tt class="docutils literal"><span class="pre">u</span></tt>. If <tt class="docutils literal"><span class="pre">g</span></tt> is undirected, then <tt class="docutils literal"><span class="pre">u</span></tt> is also added to the neighbor list of <tt class="docutils literal"><span class="pre">v</span></tt>.
+It returns the added edge.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="graph">
+<h2>Graph<a class="headerlink" href="#graph" title="Permalink to this headline">¶</a></h2>
+<p><tt class="docutils literal"><span class="pre">GenericGraph</span></tt> provides a complete interface by integrating edge list, adjacency list, and incidence list into one type. The definition is given by</p>
+<div class="highlight-python"><pre>type GenericGraph{V,E,VList,EList,AdjList,IncList} &lt;: AbstractGraph{V,E}</pre>
+</div>
+<p>It has six type parameters:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">V</span></tt>: the vertex type</li>
+<li><tt class="docutils literal"><span class="pre">E</span></tt>: the edge type</li>
+<li><tt class="docutils literal"><span class="pre">VList</span></tt>: the type of vertex list</li>
+<li><tt class="docutils literal"><span class="pre">EList</span></tt>: the type of edge list</li>
+<li><tt class="docutils literal"><span class="pre">AdjList</span></tt>: the type of adjacency list</li>
+<li><tt class="docutils literal"><span class="pre">IncList</span></tt>: the type of incidence list</li>
+</ul>
+<p>It also defines <tt class="docutils literal"><span class="pre">SimpleGraph</span></tt> as follows</p>
+<div class="highlight-python"><pre>typealias SimpleGraph GenericGraph{
+    Int,            # V
+    IEdge,          # E
+    Range1{Int},    # VList
+    Vector{IEdge},  # EList
+    Vector{Vector{Int}},    # AdjList
+    Vector{Vector{IEdge}}}  # IncList</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">GenericGraph</span></tt> implements the following interfaces:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">vertex_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">edge_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">vertex_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">edge_map</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">adjacency_list</span></tt></li>
+<li><tt class="docutils literal"><span class="pre">incidence_list</span></tt></li>
+</ul>
+<p>Specifically, it implements the following methods:</p>
+<dl class="function">
+<dt>
+<tt class="descname">is_directed</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns whether <tt class="docutils literal"><span class="pre">g</span></tt> is a directed graph.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">num_vertices</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns the number of vertices contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">vertices</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns an iterable view/container of all vertices.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">num_edges</tt><big>(</big><em>g</em><big>)</big></dt>
+<dd><p>returns the number of edges contained in <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="edges">
+<tt class="descname">edges</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#edges" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns an iterable view/container of all edges.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">vertex_index</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the index of a vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt></p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">edge_index</tt><big>(</big><em>e</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the index of a vertex <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">source</tt><big>(</big><em>e</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the source vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">target</tt><big>(</big><em>e</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the target vertex of an edge <tt class="docutils literal"><span class="pre">e</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">out_degree</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the number of outgoing neighbors from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">out_edges</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns the number of outgoing edges from vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">out_neighbors</tt><big>(</big><em>v</em>, <em>g</em><big>)</big></dt>
+<dd><p>returns an iterable view/container of all outgoing neighbors of vertex <tt class="docutils literal"><span class="pre">v</span></tt> in graph <tt class="docutils literal"><span class="pre">g</span></tt>.</p>
+</dd></dl>
+
+<p>In addition, it also implements the following methods for construction:</p>
+<dl class="function">
+<dt id="simple_graph">
+<tt class="descname">simple_graph</tt><big>(</big><em>nv</em><span class="optional">[</span>, <em>is_directed=true</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#simple_graph" title="Permalink to this definition">¶</a></dt>
+<dd><p>constructs an instance of <tt class="docutils literal"><span class="pre">SimpleGraph</span></tt> with <tt class="docutils literal"><span class="pre">nv</span></tt> vertices and no edges (initially).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">graph</tt><big>(</big><em>V</em>, <em>E</em><span class="optional">[</span>, <em>is_directed=true</em><span class="optional">]</span><big>)</big></dt>
+<dd><p>constructs an empty graph of vertex type <tt class="docutils literal"><span class="pre">V</span></tt> and edge type <tt class="docutils literal"><span class="pre">E</span></tt>. The vertex list, edge list, adjacency list, and incidence list are respectively of types: <tt class="docutils literal"><span class="pre">Vector{V}</span></tt>, <tt class="docutils literal"><span class="pre">Vector{E}</span></tt>, <tt class="docutils literal"><span class="pre">Vector{Vector{V}}</span></tt>, and <tt class="docutils literal"><span class="pre">Vector{Vector{E}}</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_vertex!(g, v)</tt></dt>
+<dd><p>adds a vertex <tt class="docutils literal"><span class="pre">v</span></tt>. <tt class="docutils literal"><span class="pre">v</span></tt> can also be a key value if <tt class="docutils literal"><span class="pre">V</span></tt> is <tt class="docutils literal"><span class="pre">KeyVertex</span></tt>, or a label string if <tt class="docutils literal"><span class="pre">V</span></tt> is <tt class="docutils literal"><span class="pre">ExVertex</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_edge!(g, e)</tt></dt>
+<dd><p>adds an edge <tt class="docutils literal"><span class="pre">e</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">add_edge!(g, u, v)</tt></dt>
+<dd><p>adds an edge between <tt class="docutils literal"><span class="pre">u</span></tt> and <tt class="docutils literal"><span class="pre">v</span></tt>. This applies only when <tt class="docutils literal"><span class="pre">E</span></tt> is either <tt class="docutils literal"><span class="pre">Edge</span></tt> or <tt class="docutils literal"><span class="pre">ExEdge</span></tt>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="algorithms.html" title="Graph Algorithms"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="vertex_edge.html" title="Vertices and Edges"
+             >previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dahua Lin.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

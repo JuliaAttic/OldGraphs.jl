@@ -1,0 +1,412 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Graph Algorithms &mdash; Graphs.jl 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="next" title="Matrix Representation" href="matrix.html" />
+    <link rel="prev" title="Graph Types" href="graphs.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="matrix.html" title="Matrix Representation"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="graphs.html" title="Graph Types"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Graph Algorithms</a><ul>
+<li><a class="reference internal" href="#graph-traversal">Graph Traversal</a></li>
+<li><a class="reference internal" href="#cycle-detection">Cycle detection</a></li>
+<li><a class="reference internal" href="#connected-components">Connected components</a></li>
+<li><a class="reference internal" href="#topological-sorting">Topological Sorting</a></li>
+<li><a class="reference internal" href="#shortest-paths">Shortest Paths</a><ul>
+<li><a class="reference internal" href="#dijkstra-s-algorithm">Dijkstra&#8217;s Algorithm</a></li>
+<li><a class="reference internal" href="#floyd-warshall-s-algorithm">Floyd-Warshall&#8217;s algorithm</a></li>
+</ul>
+</li>
+<li><a class="reference internal" href="#minimum-spanning-trees">Minimum Spanning Trees</a><ul>
+<li><a class="reference internal" href="#prim-s-algorithm">Prim&#8217;s algorithm</a></li>
+<li><a class="reference internal" href="#kruskal-s-algorithm">Kruskal&#8217;s algorithm</a></li>
+</ul>
+</li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="graphs.html"
+                        title="previous chapter">Graph Types</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="matrix.html"
+                        title="next chapter">Matrix Representation</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/algorithms.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="graph-algorithms">
+<h1>Graph Algorithms<a class="headerlink" href="#graph-algorithms" title="Permalink to this headline">¶</a></h1>
+<p><tt class="docutils literal"><span class="pre">Graphs.jl</span></tt> implements a collection of classic graph algorithms:</p>
+<ul class="simple">
+<li>graph traversal with visitor support: BFS, DFS</li>
+<li>cycle detection</li>
+<li>connected components</li>
+<li>topological sorting</li>
+<li>shortest paths: Dijkstra, Floyd-Warshall</li>
+<li>minimum spanning trees: Prim, Kruskal</li>
+<li>more algorithms are being implemented</li>
+</ul>
+<div class="section" id="graph-traversal">
+<h2>Graph Traversal<a class="headerlink" href="#graph-traversal" title="Permalink to this headline">¶</a></h2>
+<p>Graph traversal refers to a process that traverses vertices of a graph following certain order (starting from user-input sources). This package implements two traversal schemes: <em>breadth-first</em> and <em>depth-first</em>.</p>
+<p>During traveral, each vertex maintains a status (also called <em>color</em>), which is an integer value defined as below:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">0</span></tt>: the vertex has not been encountered (<em>i.e.</em> discovered)</li>
+<li><tt class="docutils literal"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">1</span></tt>: the vertex has been discovered and remains open</li>
+<li><tt class="docutils literal"><span class="pre">color</span> <span class="pre">=</span> <span class="pre">2</span></tt>: the vertex has been closed (<em>i.e.</em> all its neighbors have been examined)</li>
+</ul>
+<dl class="function">
+<dt id="traverse_graph">
+<tt class="descname">traverse_graph</tt><big>(</big><em>graph</em>, <em>alg</em>, <em>source</em>, <em>visitor</em><span class="optional">[</span>, <em>colormap</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#traverse_graph" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first last simple">
+<li><strong>graph</strong> &#8211; The input graph, which must implement <tt class="docutils literal"><span class="pre">vertex_map</span></tt> and <tt class="docutils literal"><span class="pre">adjacency_list</span></tt>.</li>
+<li><strong>alg</strong> &#8211; The algorithm of traveral, which can be either <tt class="docutils literal"><span class="pre">BreadthFirst()</span></tt> or <tt class="docutils literal"><span class="pre">DepthFirst()</span></tt>.</li>
+<li><strong>source</strong> &#8211; The source vertex (or vertices). The traversal starts from here.</li>
+<li><strong>visitor</strong> &#8211; The visitor which performs certain operations along the traversal.</li>
+<li><strong>colormap</strong> &#8211; An integer vector that indicates the status of each vertex. If this is input by the user, the status will be written to the input vector, otherwise an internal color vector will be created.</li>
+</ul>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Here, <tt class="docutils literal"><span class="pre">visitor</span></tt> must be an instance of a sub-type of <tt class="docutils literal"><span class="pre">AbstractGraphVisitor</span></tt>. A specific graph visitor type can choose to implement some or all of the following methods.</p>
+<dl class="function">
+<dt>
+<tt class="descname">discover_vertex!(visitor, v)</tt></dt>
+<dd><p>invoked when a vertex <tt class="docutils literal"><span class="pre">v</span></tt> is encountered for the first time. This function should return whether to continue traversal.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">open_vertex!(visitor, v)</tt></dt>
+<dd><p>invoked when a vertex <tt class="docutils literal"><span class="pre">v</span></tt> is about to examine <tt class="docutils literal"><span class="pre">v</span></tt>&#8216;s neighbors.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">examine_neighbor!(visitor, u, v, color)</tt></dt>
+<dd><p>invoked when a neighbor/out-going edge is examined. Here <tt class="docutils literal"><span class="pre">color</span></tt> is the status of <tt class="docutils literal"><span class="pre">v</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">close_vertex!(visitor, v)</tt></dt>
+<dd><p>invoked when all neighbors of <tt class="docutils literal"><span class="pre">v</span></tt> has been examined.</p>
+</dd></dl>
+
+<p>If a method of these is not implemented, it will automatically fallback to no-op. The package provides some pre-defined visitor types:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">TrivialGraphVisitor</span></tt>: all methods are no-op.</li>
+<li><tt class="docutils literal"><span class="pre">VertexListVisitor</span></tt>: it has a field <tt class="docutils literal"><span class="pre">vertices</span></tt>, which is a vector comprised of vertices in the order of being discovered.</li>
+<li><tt class="docutils literal"><span class="pre">LogGraphVisitor</span></tt>: it prints message to show the progress of the traversal.</li>
+</ul>
+<p>Many graph algorithms can be implemented based on graph traversal through certain visitors or by using the colormap in certain ways. For example, in this package, topological sorting, connected components, and cycle detection are all implemented using <tt class="docutils literal"><span class="pre">traverse_graph</span></tt> with specifically designed visitors.</p>
+</div>
+<div class="section" id="cycle-detection">
+<h2>Cycle detection<a class="headerlink" href="#cycle-detection" title="Permalink to this headline">¶</a></h2>
+<p>In graph theory, a cycle is defined to be a path that starts from some vertex <tt class="docutils literal"><span class="pre">v</span></tt> and ends up at <tt class="docutils literal"><span class="pre">v</span></tt>.</p>
+<dl class="function">
+<dt id="test_cyclic_by_dfs">
+<tt class="descname">test_cyclic_by_dfs</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#test_cyclic_by_dfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Tests whether a graph contains a cycle through depth-first search. It returns <tt class="docutils literal"><span class="pre">true</span></tt> when it finds a cycle, otherwise <tt class="docutils literal"><span class="pre">false</span></tt>. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must implement <tt class="docutils literal"><span class="pre">vertex_list</span></tt>, <tt class="docutils literal"><span class="pre">vertex_map</span></tt>, and <tt class="docutils literal"><span class="pre">adjacency_list</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="connected-components">
+<h2>Connected components<a class="headerlink" href="#connected-components" title="Permalink to this headline">¶</a></h2>
+<p>In graph theory, a connected component (in an undirected graph) refers to a subset of vertices such that there exists a path between any pair of them.</p>
+<dl class="function">
+<dt id="connected_components">
+<tt class="descname">connected_components</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#connected_components" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a vector of components, where each component is represented by a vector of vertices. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must be an undirected graph, and implement <tt class="docutils literal"><span class="pre">vertex_list</span></tt>, <tt class="docutils literal"><span class="pre">vertex_map</span></tt>, and <tt class="docutils literal"><span class="pre">adjacency_list</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="topological-sorting">
+<h2>Topological Sorting<a class="headerlink" href="#topological-sorting" title="Permalink to this headline">¶</a></h2>
+<p>Topological sorting of an acyclic directed graph is a linear ordering of vertices, such that for each directed edge <tt class="docutils literal"><span class="pre">(u,</span> <span class="pre">v)</span></tt>, <tt class="docutils literal"><span class="pre">u</span></tt> always comes before <tt class="docutils literal"><span class="pre">v</span></tt> in the ordering.</p>
+<dl class="function">
+<dt id="topological_sort_by_dfs">
+<tt class="descname">topological_sort_by_dfs</tt><big>(</big><em>g</em><big>)</big><a class="headerlink" href="#topological_sort_by_dfs" title="Permalink to this definition">¶</a></dt>
+<dd><p>Returns a topological sorting of the vertices in <tt class="docutils literal"><span class="pre">g</span></tt> in the form of a vector of vertices. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must be a directed graph, and implement <tt class="docutils literal"><span class="pre">vertex_list</span></tt>, <tt class="docutils literal"><span class="pre">vertex_map</span></tt>, and <tt class="docutils literal"><span class="pre">adjacency_list</span></tt>.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="shortest-paths">
+<h2>Shortest Paths<a class="headerlink" href="#shortest-paths" title="Permalink to this headline">¶</a></h2>
+<p>This package implements two classic algorithms for finding shortest paths: <em>Dijkstra&#8217;s algorithm</em> and <em>Floyd-Warshall algorithm</em> algorithm. We plan to implement <em>Bellman-Ford algorithm</em> and <em>Johnson&#8217;s algorithm</em> in near future.</p>
+<div class="section" id="dijkstra-s-algorithm">
+<h3>Dijkstra&#8217;s Algorithm<a class="headerlink" href="#dijkstra-s-algorithm" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="dijkstra_shortest_paths">
+<tt class="descname">dijkstra_shortest_paths</tt><big>(</big><em>graph</em>, <em>edge_dists</em>, <em>source</em><span class="optional">[</span>, <em>visitor</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#dijkstra_shortest_paths" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs Dijkstra&#8217;s algorithm to find shortest paths to all vertices from input sources.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>graph</strong> &#8211; The input graph</li>
+<li><strong>edge_dists</strong> &#8211; The vector of edge distances</li>
+<li><strong>source</strong> &#8211; The source vertex (or vertices)</li>
+<li><strong>visitor</strong> &#8211; An visitor instance</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last">An instance of <tt class="docutils literal"><span class="pre">DijkstraStates</span></tt> that encapsulates the results.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<p>Here, <tt class="docutils literal"><span class="pre">graph</span></tt> can be directed or undirected. It must implement <tt class="docutils literal"><span class="pre">vertex_map</span></tt> and <tt class="docutils literal"><span class="pre">incidence_list</span></tt>. The following is an example that shows how to use this function:</p>
+<div class="highlight-python"><pre># construct a graph and the edge distance vector
+
+g = simple_inclist(5)
+
+inputs = [       # each element is (u, v, dist)
+    (1, 2, 10.),
+    (1, 3, 5.),
+    (2, 3, 2.),
+    (3, 2, 3.),
+    (2, 4, 1.),
+    (3, 5, 2.),
+    (4, 5, 4.),
+    (5, 4, 6.),
+    (5, 1, 7.),
+    (3, 4, 9.) ]
+
+ne = length(g1_wedges)
+dists = zeros(ne)
+
+for i = 1 : ne
+    a = inputs[i]
+    add_edge!(g1, a[1], a[2])   # add edge
+    dists[i] = a[3]             # set distance
+end
+
+r = dijkstra_shortest_paths(g, dists, 1)
+
+@assert r.parents == [1, 3, 1, 2, 3]
+@assert r.dists == [0., 8., 5., 9., 7.]</pre>
+</div>
+<p>The result has several fields, among which the following are most useful:</p>
+<ul class="simple">
+<li><tt class="docutils literal"><span class="pre">parents[i]</span></tt>:  the parent vertex of the i-th vertex. The parent of each source vertex is itself.</li>
+<li><tt class="docutils literal"><span class="pre">dists[i]</span></tt>:  the minimum distance from the i-th vertex to source.</li>
+</ul>
+<p>The user can (optionally) provide a visitor that perform operations along with the algorithm. The visitor must be an instance of a sub type of <tt class="docutils literal"><span class="pre">AbstractDijkstraVisitor</span></tt>, which may implement part of all of the following methods.</p>
+<dl class="function">
+<dt>
+<tt class="descname">discover_vertex!(visitor, u, v, d)</tt></dt>
+<dd><p>Invoked when a new vertex <tt class="docutils literal"><span class="pre">v</span></tt> is first discovered (from the parent <tt class="docutils literal"><span class="pre">u</span></tt>). <tt class="docutils literal"><span class="pre">d</span></tt> is the initial distance from <tt class="docutils literal"><span class="pre">v</span></tt> to source.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">include_vertex!(visitor, u, v, d)</tt></dt>
+<dd><p>Invoked when the distance of a vertex is determined (at the point <tt class="docutils literal"><span class="pre">v</span></tt> is popped from the heap). This function should return whether to continue the procedure. One can use a visitor to terminate the algorithm earlier by letting this function return <tt class="docutils literal"><span class="pre">false</span></tt> under certain conditions.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">update_vertex!(visitor, u, v, d)</tt></dt>
+<dd><p>Invoked when the distance to a vertex is updated (relaxed).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">close_vertex!(visitor, u, v, d)</tt></dt>
+<dd><p>Invoked when a vertex is closed (all its neighbors have been examined).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="floyd-warshall-s-algorithm">
+<h3>Floyd-Warshall&#8217;s algorithm<a class="headerlink" href="#floyd-warshall-s-algorithm" title="Permalink to this headline">¶</a></h3>
+<dl class="function">
+<dt id="floyd_warshall">
+<tt class="descname">floyd_warshall</tt><big>(</big><em>dists</em><big>)</big><a class="headerlink" href="#floyd_warshall" title="Permalink to this definition">¶</a></dt>
+<dd><p>Performs Floyd-Warshall algorithm to compute shortest path lengths between each pair of vertices.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><strong>dists</strong> &#8211; The edge distance matrix.</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body">The matrix of shortest path lengths.</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">floyd_warshall!(dists)</tt></dt>
+<dd><p>Performs Floyd-Warshall algorithm inplace, updating an edge distance matrix into a matrix of shortest path lengths.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">floyd_warshall!(dists, nexts)</tt></dt>
+<dd><p>Performs Floyd-Warshall algorithm inplace, and writes the next-hop matrix. When this function finishes, <tt class="docutils literal"><span class="pre">nexts[i,j]</span></tt> is the next hop of <tt class="docutils literal"><span class="pre">i</span></tt> along the shortest path from <tt class="docutils literal"><span class="pre">i</span></tt> to <tt class="docutils literal"><span class="pre">j</span></tt>. One can reconstruct the shortest path based on this matrix.</p>
+</dd></dl>
+
+</div>
+</div>
+<div class="section" id="minimum-spanning-trees">
+<h2>Minimum Spanning Trees<a class="headerlink" href="#minimum-spanning-trees" title="Permalink to this headline">¶</a></h2>
+<p>This package implements two algorithm to find a minimum spanning tree of a graph: <em>Prim&#8217;s algorithm</em> and <em>Kruskal&#8217;s algorithm</em>.</p>
+<div class="section" id="prim-s-algorithm">
+<h3>Prim&#8217;s algorithm<a class="headerlink" href="#prim-s-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>Prim&#8217;s algorithm finds a minimum spanning tree by growing from a root vertex, adding one edge at each iteration.</p>
+<dl class="function">
+<dt id="prim_minimum_spantree">
+<tt class="descname">prim_minimum_spantree</tt><big>(</big><em>graph</em>, <em>eweights</em>, <em>root</em><big>)</big><a class="headerlink" href="#prim_minimum_spantree" title="Permalink to this definition">¶</a></dt>
+<dd><p>Perform Prim&#8217;s algorithm to find a minimum spanning tree.</p>
+<table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>graph</strong> &#8211; the input graph</li>
+<li><strong>eweights</strong> &#8211; the edge weights</li>
+<li><strong>root</strong> &#8211; the root vertex</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">(re,</span> <span class="pre">rw)</span></tt>, where <tt class="docutils literal"><span class="pre">re</span></tt> is a vector of edges that constitute the resultant tree, and <tt class="docutils literal"><span class="pre">rw</span></tt> is the vector of corresponding edge weights.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+<div class="section" id="kruskal-s-algorithm">
+<h3>Kruskal&#8217;s algorithm<a class="headerlink" href="#kruskal-s-algorithm" title="Permalink to this headline">¶</a></h3>
+<p>Kruskal&#8217;s algorithm finds a minimum spanning tree (or forest) by gradually uniting disjoint trees.</p>
+<dl class="function">
+<dt id="kruskal_minimum_spantree">
+<tt class="descname">kruskal_minimum_spantree</tt><big>(</big><em>graph</em>, <em>eweights</em><span class="optional">[</span>, <em>K=1</em><span class="optional">]</span><big>)</big><a class="headerlink" href="#kruskal_minimum_spantree" title="Permalink to this definition">¶</a></dt>
+<dd><table class="docutils field-list" frame="void" rules="none">
+<col class="field-name" />
+<col class="field-body" />
+<tbody valign="top">
+<tr class="field-odd field"><th class="field-name">Parameters:</th><td class="field-body"><ul class="first simple">
+<li><strong>graph</strong> &#8211; the input graph</li>
+<li><strong>eweights</strong> &#8211; the edge weights</li>
+<li><strong>K</strong> &#8211; the number of trees in the resultant forest. If <tt class="docutils literal"><span class="pre">K</span> <span class="pre">=</span> <span class="pre">1</span></tt>, it ends up with a tree. This argument is optional. By default, it is set to <tt class="docutils literal"><span class="pre">1</span></tt>.</li>
+</ul>
+</td>
+</tr>
+<tr class="field-even field"><th class="field-name">Returns:</th><td class="field-body"><p class="first last"><tt class="docutils literal"><span class="pre">(re,</span> <span class="pre">rw)</span></tt>, where <tt class="docutils literal"><span class="pre">re</span></tt> is a vector of edges that constitute the resultant tree, and <tt class="docutils literal"><span class="pre">rw</span></tt> is the vector of corresponding edge weights.</p>
+</td>
+</tr>
+</tbody>
+</table>
+</dd></dl>
+
+</div>
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="matrix.html" title="Matrix Representation"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="graphs.html" title="Graph Types"
+             >previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dahua Lin.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

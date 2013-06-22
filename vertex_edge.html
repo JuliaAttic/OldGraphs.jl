@@ -1,0 +1,197 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Vertices and Edges &mdash; Graphs.jl 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="next" title="Graph Types" href="graphs.html" />
+    <link rel="prev" title="Generic Interfaces" href="interface.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="graphs.html" title="Graph Types"
+             accesskey="N">next</a> |</li>
+        <li class="right" >
+          <a href="interface.html" title="Generic Interfaces"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Vertices and Edges</a><ul>
+<li><a class="reference internal" href="#vertex-types">Vertex Types</a></li>
+<li><a class="reference internal" href="#edge-types">Edge Types</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="interface.html"
+                        title="previous chapter">Generic Interfaces</a></p>
+  <h4>Next topic</h4>
+  <p class="topless"><a href="graphs.html"
+                        title="next chapter">Graph Types</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/vertex_edge.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="vertices-and-edges">
+<h1>Vertices and Edges<a class="headerlink" href="#vertices-and-edges" title="Permalink to this headline">¶</a></h1>
+<div class="section" id="vertex-types">
+<h2>Vertex Types<a class="headerlink" href="#vertex-types" title="Permalink to this headline">¶</a></h2>
+<p>A vertex can be of any Julia type. For example, it can be an integer, a character, or a string. In a simplistic setting where there is additional information associated with a vertex, it is recommended to use <tt class="docutils literal"><span class="pre">Int</span></tt> as the vertex type, which would lead to the best performance.</p>
+<p>This package provides two specific vertex types: <tt class="docutils literal"><span class="pre">KeyVertex</span></tt> and <tt class="docutils literal"><span class="pre">ExVertex</span></tt>. The definition of <tt class="docutils literal"><span class="pre">KeyVertex</span></tt> is:</p>
+<div class="highlight-python"><pre>immutable KeyVertex{K}
+    index::Int
+    key::K
+end</pre>
+</div>
+<p>Here, each vertex has a unique index and a key value of a user-chosen type (<em>e.g.</em> a string).</p>
+<p>The definition of <tt class="docutils literal"><span class="pre">ExVertex</span></tt> is:</p>
+<div class="highlight-python"><pre>type ExVertex
+    index::Int
+    label::UTF8String
+    attributes::Dict{UTF8String,Any}
+end</pre>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">ExVertex</span></tt> type allows one to attach a label as well as other attributes to a vertex. The constructor of this type takes an index and a label string as arguments. The following code shows how one can create an instance of <tt class="docutils literal"><span class="pre">ExVertex</span></tt> and attach a price to it.</p>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="n">ExVertex</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;vertex-a&quot;</span><span class="p">)</span>
+<span class="n">v</span><span class="o">.</span><span class="n">attributes</span><span class="p">[</span><span class="s">&quot;price&quot;</span><span class="p">]</span> <span class="o">=</span> <span class="mf">100.0</span>
+</pre></div>
+</div>
+<p>The <tt class="docutils literal"><span class="pre">ExVertex</span></tt> type implements a <tt class="docutils literal"><span class="pre">vertex_index</span></tt> function, as</p>
+<dl class="function">
+<dt id="vertex_index">
+<tt class="descname">vertex_index</tt><big>(</big><em>v</em><big>)</big><a class="headerlink" href="#vertex_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the index of the vertex <tt class="docutils literal"><span class="pre">v</span></tt>.</p>
+</dd></dl>
+
+<p>In addition, for integers, we have</p>
+<div class="highlight-python"><pre>vertex_index(v::Integer) = v</pre>
+</div>
+<p>This makes it convenient to use integers as vertices in graphs.</p>
+</div>
+<div class="section" id="edge-types">
+<h2>Edge Types<a class="headerlink" href="#edge-types" title="Permalink to this headline">¶</a></h2>
+<p>This package provides two edge types: <tt class="docutils literal"><span class="pre">Edge</span></tt> and <tt class="docutils literal"><span class="pre">ExEdge</span></tt>. The former is a basic edge type that simply encapsulates the source and target vertices of an edge, while the latter allows one to specify attributes.</p>
+<p>The definition of <tt class="docutils literal"><span class="pre">Edge</span></tt> is given by</p>
+<div class="highlight-python"><pre>immutable Edge{V}
+    index::Int
+    source::V
+    target::V
+end
+
+typealias IEdge Edge{Int}</pre>
+</div>
+<p>The definition of <tt class="docutils literal"><span class="pre">ExEdge</span></tt> is given by</p>
+<div class="highlight-python"><pre>type ExEdge{V}
+    index::Int
+    source::V
+    target::V
+    attributes::Dict{UTF8String,Any}
+end</pre>
+</div>
+<p><tt class="docutils literal"><span class="pre">ExEdge</span></tt> has two constructors, one takes <tt class="docutils literal"><span class="pre">index</span></tt>, <tt class="docutils literal"><span class="pre">source</span></tt>, and <tt class="docutils literal"><span class="pre">target</span></tt> as arguments, while the other use all four fields.</p>
+<p>One can either construct an edge directly using the constructors, or use the <tt class="docutils literal"><span class="pre">add_edge</span></tt> methods for graphs, which can automatically assign an index to a new edge.</p>
+<p>Both edge types implement the following methods:</p>
+<dl class="function">
+<dt id="edge_index">
+<tt class="descname">edge_index</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#edge_index" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the index of the edge <tt class="docutils literal"><span class="pre">e</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="source">
+<tt class="descname">source</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#source" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the source vertex of the edge <tt class="docutils literal"><span class="pre">e</span></tt>.</p>
+</dd></dl>
+
+<dl class="function">
+<dt id="target">
+<tt class="descname">target</tt><big>(</big><em>e</em><big>)</big><a class="headerlink" href="#target" title="Permalink to this definition">¶</a></dt>
+<dd><p>returns the target vertex of the edge <tt class="docutils literal"><span class="pre">e</span></tt>.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="graphs.html" title="Graph Types"
+             >next</a> |</li>
+        <li class="right" >
+          <a href="interface.html" title="Generic Interfaces"
+             >previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dahua Lin.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>

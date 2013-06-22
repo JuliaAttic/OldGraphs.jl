@@ -1,0 +1,190 @@
+
+
+<!DOCTYPE html PUBLIC "-//W3C//DTD XHTML 1.0 Transitional//EN"
+  "http://www.w3.org/TR/xhtml1/DTD/xhtml1-transitional.dtd">
+
+
+<html xmlns="http://www.w3.org/1999/xhtml">
+  <head>
+    <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
+    
+    <title>Matrix Representation &mdash; Graphs.jl 0.2 documentation</title>
+    
+    <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
+    <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
+    
+    <script type="text/javascript">
+      var DOCUMENTATION_OPTIONS = {
+        URL_ROOT:    '',
+        VERSION:     '0.2',
+        COLLAPSE_INDEX: false,
+        FILE_SUFFIX: '.html',
+        HAS_SOURCE:  true
+      };
+    </script>
+    <script type="text/javascript" src="_static/jquery.js"></script>
+    <script type="text/javascript" src="_static/underscore.js"></script>
+    <script type="text/javascript" src="_static/doctools.js"></script>
+    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="prev" title="Graph Algorithms" href="algorithms.html" /> 
+  </head>
+  <body>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             accesskey="I">index</a></li>
+        <li class="right" >
+          <a href="algorithms.html" title="Graph Algorithms"
+             accesskey="P">previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+      <div class="sphinxsidebar">
+        <div class="sphinxsidebarwrapper">
+  <h3><a href="index.html">Table Of Contents</a></h3>
+  <ul>
+<li><a class="reference internal" href="#">Matrix Representation</a><ul>
+<li><a class="reference internal" href="#adjacency-matrix">Adjacency Matrix</a></li>
+<li><a class="reference internal" href="#weight-matrix">Weight Matrix</a></li>
+<li><a class="reference internal" href="#laplacian-matrix">Laplacian Matrix</a></li>
+</ul>
+</li>
+</ul>
+
+  <h4>Previous topic</h4>
+  <p class="topless"><a href="algorithms.html"
+                        title="previous chapter">Graph Algorithms</a></p>
+  <h3>This Page</h3>
+  <ul class="this-page-menu">
+    <li><a href="_sources/matrix.txt"
+           rel="nofollow">Show Source</a></li>
+  </ul>
+<div id="searchbox" style="display: none">
+  <h3>Quick search</h3>
+    <form class="search" action="search.html" method="get">
+      <input type="text" name="q" />
+      <input type="submit" value="Go" />
+      <input type="hidden" name="check_keywords" value="yes" />
+      <input type="hidden" name="area" value="default" />
+    </form>
+    <p class="searchtip" style="font-size: 90%">
+    Enter search terms or a module, class or function name.
+    </p>
+</div>
+<script type="text/javascript">$('#searchbox').show(0);</script>
+        </div>
+      </div>
+
+    <div class="document">
+      <div class="documentwrapper">
+        <div class="bodywrapper">
+          <div class="body">
+            
+  <div class="section" id="matrix-representation">
+<h1>Matrix Representation<a class="headerlink" href="#matrix-representation" title="Permalink to this headline">¶</a></h1>
+<p>Matrix representation of graphs are widely used in algebraic analysis of graphs. This package comprises functions that derive matrix representation of an input graph.</p>
+<div class="section" id="adjacency-matrix">
+<h2>Adjacency Matrix<a class="headerlink" href="#adjacency-matrix" title="Permalink to this headline">¶</a></h2>
+<p>An <em>adjacency matrix</em> is defined as</p>
+<div class="math">
+<p><img src="_images/math/5771f31dabeb1bdcee25bb8d702fb4a3f44f6d86.png" alt="A(u, v) = \begin{cases}
+    1 &amp; (u, v) \in E \\
+    0 &amp; \text{otherwise}
+\end{cases}"/></p>
+</div><dl class="function">
+<dt id="adjacency_matrix">
+<tt class="descname">adjacency_matrix</tt><big>(</big><em>is_directed</em>, <em>n</em>, <em>edges</em><big>)</big><a class="headerlink" href="#adjacency_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs an adjacency matrix from a list of edges (over <tt class="docutils literal"><span class="pre">n</span></tt> vertices).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">adjacency_matrix</tt><big>(</big><em>graph</em><big>)</big></dt>
+<dd><p>Constructs an adjacency matrix for a graph.</p>
+</dd></dl>
+
+</div>
+<div class="section" id="weight-matrix">
+<h2>Weight Matrix<a class="headerlink" href="#weight-matrix" title="Permalink to this headline">¶</a></h2>
+<p>A <em>weight matrix</em> is defined as</p>
+<div class="math">
+<p><img src="_images/math/ebdefe55d5d7d6c9302021686105552777277258.png" alt="W(u, v) = \begin{cases}
+    w(e) &amp; e = (u, v) \in E \\
+    0 &amp; \text{otherwise}
+\end{cases}"/></p>
+</div><dl class="function">
+<dt id="weight_matrix">
+<tt class="descname">weight_matrix</tt><big>(</big><em>is_directed</em>, <em>n</em>, <em>edges</em>, <em>eweights</em><big>)</big><a class="headerlink" href="#weight_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a weight matrix from a list of edges and a vector of edge weights.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">weight_matrix</tt><big>(</big><em>graph</em>, <em>eweights</em><big>)</big></dt>
+<dd><p>Constructs a weight matrix from a graph and a vector of edge weights. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must implement <tt class="docutils literal"><span class="pre">edge_map</span></tt> and (<tt class="docutils literal"><span class="pre">edge_list</span></tt> or <tt class="docutils literal"><span class="pre">incidence_list</span></tt>).</p>
+</dd></dl>
+
+</div>
+<div class="section" id="laplacian-matrix">
+<h2>Laplacian Matrix<a class="headerlink" href="#laplacian-matrix" title="Permalink to this headline">¶</a></h2>
+<p><em>Laplacian matrix</em> is significant in algebraic graph theory. The eigenvalues of a Laplacian matrix characterizes important properties of a graph. For an undirected graph, it is defined as:</p>
+<div class="math">
+<p><img src="_images/math/75efa5b897686fe8c4e17834127c8865162ce30e.png" alt="L(u, v) = \begin{cases}
+    deg(u) &amp; u = v \\
+    -1 &amp; u \ne v \text{ and } \{u, v\} \in E \\
+    0 &amp; \text{otherwise}
+\end{cases}"/></p>
+</div><dl class="function">
+<dt id="laplacian_matrix">
+<tt class="descname">laplacian_matrix</tt><big>(</big><em>n</em>, <em>edges</em><big>)</big><a class="headerlink" href="#laplacian_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a Laplacian matrix from a list of edges (over <tt class="docutils literal"><span class="pre">n</span></tt> vertices).</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">laplacian_matrix</tt><big>(</big><em>graph</em><big>)</big></dt>
+<dd><p>Constructs a Laplacian matrix over an undirected graph.</p>
+</dd></dl>
+
+<p>For graphs with weighted edges, we have</p>
+<dl class="function">
+<dt>
+<tt class="descname">laplacian_matrix</tt><big>(</big><em>n</em>, <em>edges</em>, <em>eweights</em><big>)</big></dt>
+<dd><p>Constructs a weighted Laplacian matrix from a list of edges together with a vector of edge weights.</p>
+</dd></dl>
+
+<dl class="function">
+<dt>
+<tt class="descname">laplacian_matrix</tt><big>(</big><em>graph</em>, <em>eweights</em><big>)</big></dt>
+<dd><p>Constructs a weighted Laplacian matrix from an undirected graph with a vector of edge weights.</p>
+</dd></dl>
+
+</div>
+</div>
+
+
+          </div>
+        </div>
+      </div>
+      <div class="clearer"></div>
+    </div>
+    <div class="related">
+      <h3>Navigation</h3>
+      <ul>
+        <li class="right" style="margin-right: 10px">
+          <a href="genindex.html" title="General Index"
+             >index</a></li>
+        <li class="right" >
+          <a href="algorithms.html" title="Graph Algorithms"
+             >previous</a> |</li>
+        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+      </ul>
+    </div>
+    <div class="footer">
+        &copy; Copyright 2013, Dahua Lin.
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+    </div>
+  </body>
+</html>
