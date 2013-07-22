@@ -57,28 +57,28 @@ add_vertex!{K}(g::GenericGraph{KeyVertex{K}}, key::K) = add_vertex!(g, KeyVertex
 add_vertex!(g::GenericGraph{ExVertex}, label::String) = add_vertex!(g, ExVertex(length(g.vertices)+1, label))
 
 function add_edge!{V,E}(g::GenericGraph{V,E}, e::E)
-    nv::Int = num_vertices(g)   
-    
+    nv::Int = num_vertices(g)
+
     u::V = source(e)
     v::V = target(e)
     ui::Int = vertex_index(u, g)
     vi::Int = vertex_index(v, g)
-    
+
     if !(ui >= 1 && ui <= nv && vi >= 1 && vi <= nv)
         throw(ArgumentError("u or v is not a valid vertex."))
     end
     ei::Int = length(g.edges) + 1
-    
+
     if edge_index(e) != ei
         throw(ArgumentError("Invalid edge index."))
     end
-    
+
     push!(g.edges, e)
     push!(g.adjlist[ui], v)
     push!(g.inclist[ui], e)
-    
+
     if !g.is_directed
-        push!(g.adjlist[vi], u)       
+        push!(g.adjlist[vi], u)
         push!(g.inclist[vi], revedge(e))
     end
     e
@@ -107,6 +107,18 @@ function graph{V,E}(vty::Type{V}, ety::Type{E}; is_directed::Bool=true)
     adjlist = Array(Vector{V}, 0)
     inclist = Array(Vector{E}, 0)
     GenericGraph{V,E,Vector{V},Vector{E},Vector{Vector{V}},Vector{Vector{E}}}(
-        is_directed, vertices, edges, adjlist, inclist)    
+        is_directed, vertices, edges, adjlist, inclist)
 end
 
+function edge_key{U,V}(u::U, v::V, graph::AbstractGraph)
+    r::Int
+    c::Int
+
+    if !is_directed(graph)
+        r, c = sort([vertex_index(u, graph), vertex_index(v, graph)])
+    else
+        r = vertex_index(u, graph)
+        c = vertex_index(v, graph)
+    end
+    return string(r) * ":" * string(c)
+end
