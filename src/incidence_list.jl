@@ -11,7 +11,7 @@
 ###########################################################
 
 type GenericIncidenceList{V, E, VList, IncList} <: AbstractGraph{V, E}
-    is_directed::Bool    
+    is_directed::Bool
     vertices::VList
     nedges::Int
     inclist::IncList
@@ -47,8 +47,8 @@ function add_vertex!{V,E}(g::VectorIncidenceList{V,E}, v::V)
     iv::Int = vertex_index(v)
     if iv != nv + 1
         throw(ArgumentError("Invalid vertex index."))
-    end        
-    
+    end
+
     push!(g.vertices, v)
     push!(g.inclist, Array(E,0))
     v
@@ -67,7 +67,7 @@ function add_edge!{V,E}(g::GenericIncidenceList{V, E}, u::V, v::V)
     nv::Int = num_vertices(g)
     ui::Int = vertex_index(u)
     vi::Int = vertex_index(v)
-    
+
     if !(ui >= 1 && ui <= nv && vi >= 1 && vi <= nv)
         throw(ArgumentError("u or v is not a valid vertex."))
     end
@@ -75,7 +75,7 @@ function add_edge!{V,E}(g::GenericIncidenceList{V, E}, u::V, v::V)
 
     e = E(ei, u, v)
     push!(g.inclist[ui], e)
-    
+
     if !g.is_directed
         push!(g.inclist[vi], revedge(e))
     end
@@ -84,7 +84,7 @@ end
 # mutation
 
 function simple_inclist(nv::Int; is_directed::Bool = true)
-    inclist = Array(Vector{Edge{Int}}, nv)    
+    inclist = Array(Vector{Edge{Int}}, nv)
     for i = 1 : nv
         inclist[i] = Array(Edge{Int}, 0)
     end
