@@ -32,8 +32,9 @@ A *weight matrix* is defined as
 .. math::
 
     W(u, v) = \begin{cases}
-        w(e) & e = (u, v) \in E \\
-        0 & \text{otherwise}
+        0 & u = v \\
+        w(e) & u \ne v \text{ and } \{u, v\} \in E \\
+        Inf & \text{otherwise}
     \end{cases}
     
 .. py:function:: weight_matrix(is_directed, n, edges, eweights)

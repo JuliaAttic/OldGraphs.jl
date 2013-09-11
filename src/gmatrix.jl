@@ -178,60 +178,28 @@ end
     
     
 function weight_matrix{W}(is_directed::Bool, n::Int, edges, eweights::AbstractVector{W})
-    wmap = zeros(W, (n, n))
+    wmap = Inf * ones(W, (n, n))
+    wmap[diagind(wmap)] = zero(W)
     if is_directed
         for e in edges
             w = eweights[edge_index(e)]
             ui = vertex_index(source(e))
             vi = vertex_index(target(e))
-            wmap[ui, vi] += w
+            tmp = wmap[ui, vi]
+            wmap[ui, vi] = isinf(tmp) ? w : tmp + w
         end
     else
         for e in edges
             w = eweights[edge_index(e)]
             ui = vertex_index(source(e))
             vi = vertex_index(target(e))
-            wmap[ui, vi] += w
-            wmap[vi, ui] += w
+            tmp = wmap[ui, vi]
+            wmap[ui, vi] = isinf(tmp) ? w : tmp + w
+            wmap[vi, ui] = wmap[ui, vi]
         end
     end
     wmap   
 end    
-
-function weight_matrix_sparse{W}(is_directed::Bool, n::Int, edges, eweights::AbstractVector{W})
-    ne = length(edges)
-    if !is_directed
-        ne *= 2
-    end
-
-    idx = 1
-    ui = Array(Int, ne)
-    vi = Array(Int, ne)
-    w = Array(W, ne)
-    if is_directed
-        for e in edges
-            ui[idx] = vertex_index(source(e))
-            vi[idx] = vertex_index(target(e))
-            w[idx] = eweights[edge_index(e)]
-            idx += 1
-        end
-    else
-        for e in edges
-            src = source(e)
-            tgt = target(e)
-            ww = eweights[edge_index(e)]
-            ui[idx] = vertex_index(src)
-            vi[idx] = vertex_index(tgt)
-            w[idx] = ww
-            idx += 1
-            ui[idx] = vertex_index(tgt)
-            vi[idx] = vertex_index(src)
-            w[idx] = ww
-            idx += 1
-        end
-    end
-    sparse(ui, vi, w, n, n)
-end
 
 function weight_matrix{W}(g::AbstractGraph, eweights::AbstractVector{W})
     
@@ -245,54 +213,21 @@ function weight_matrix{W}(g::AbstractGraph, eweights::AbstractVector{W})
         weight_matrix(is_directed(g), n, edges(g), eweights)
     
     elseif implements_incidence_list(g)
-        wmap = zeros(W, (n, n))
+        wmap = Inf * ones(W, (n, n))
+        wmap[diagind(wmap)] = zero(W)
         for u in vertices(g)
             ui = vertex_index(u, g)
             for e in out_edges(u, g)
                 w = eweights[edge_index(e, g)]
                 vi = vertex_index(target(e, g), g)
-                wmap[ui, vi] += w
+                tmp = wmap[ui, vi]
+                wmap[ui, vi] = isinf(tmp) ? w : tmp + w
             end
         end
         wmap       
     else
         throw(ArgumentError("g must implement either edge_list or incidence_list."))
     end        
-end
-
-function weight_matrix_sparse{W}(g::AbstractGraph, eweights::AbstractVector{W})
-
-    @graph_requires g vertex_list vertex_map edge_map
-
-    n = num_vertices(g)
-    ne = num_edges(g)
-    if !is_directed(g)
-        ne *= 2
-    end
-    ui = Array(Int, ne)
-    vi = Array(Int, ne)
-    w = Array(W, ne)
-
-    if implements_edge_list(g)
-        weight_matrix_sparse(is_directed(g), n, edges(g), eweights)
-    elseif implements_incidence_list(g)
-        idx = 1
-        for u in vertices(g)
-            uu = vertex_index(u, g)
-            for e in out_edges(u, g)
-                ww = eweights[edge_index(e, g)]
-                vv = vertex_index(target(e, g), g)
-                ui[idx] = uu
-                vi[idx] = vv
-                w[idx] = ww
-                idx += 1
-            end
-        end
-        sparse(ui, vi, w, n, n)
-    else
-        throw(ArgumentError("g must implement either edge_list or incidence_list."))
-    end
-
 end
 
 
