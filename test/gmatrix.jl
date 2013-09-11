@@ -49,23 +49,14 @@ end
 
 eweights = [1., 2., 3., 4.]
 
-wm0  = [0. 1. 2. 0.; 0. 0. 0. 3.; 0. 0. 0. 4.; 0. 0. 0. 0.]
-wm0u = [0. 1. 2. 0.; 1. 0. 0. 3.; 2. 0. 0. 4.; 0. 3. 4. 0.]
+wm0  = [0. 1. 2. Inf; Inf 0. Inf 3.; Inf Inf 0. 4.; Inf Inf Inf 0.]
+wm0u = [0. 1. 2. Inf; 1. 0. Inf 3.; 2. Inf 0. 4.; Inf 3. 4. 0.]
 
 @test weight_matrix(true, 4, edges, eweights) == wm0
 @test weight_matrix(false, 4, edges, eweights) == wm0u
 
 @test weight_matrix(gd, eweights) == wm0
 @test weight_matrix(gu, eweights) == wm0u
-
-wm0_s = sparse(wm0)
-wm0u_s = sparse(wm0u)
-
-@test weight_matrix_sparse(true, 4, edges, eweights) == wm0_s
-@test weight_matrix_sparse(false, 4, edges, eweights) == wm0u_s
-
-@test weight_matrix_sparse(gd, eweights) == wm0_s
-@test weight_matrix_sparse(gu, eweights) == wm0u_s
 
 # Laplacian matrix
 
