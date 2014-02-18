@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Generic Interfaces &mdash; Graphs.jl 0.2 documentation</title>
+    <title>Generic Interfaces &mdash; Graphs.jl 0.3 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.2',
+        VERSION:     '0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="top" title="Graphs.jl 0.3 documentation" href="index.html" />
     <link rel="next" title="Vertices and Edges" href="vertex_edge.html" />
     <link rel="prev" title="Main Features" href="overview.html" /> 
   </head>
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="overview.html" title="Main Features"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Graphs.jl 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -198,13 +198,14 @@
 </dd></dl>
 
 <p>The following example prints all vertices of a graph as well as its neighbors</p>
-<div class="highlight-python"><pre>for u in vertices(g)
-    print("$u: ")
-    for v in out_neighbors(u, g)
-        println("$v ")
-    end
-    println()
-end</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;$u: &quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">v</span> <span class="ow">in</span> <span class="n">out_neighbors</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">&quot;$v &quot;</span><span class="p">)</span>
+    <span class="n">end</span>
+    <span class="n">println</span><span class="p">()</span>
+<span class="n">end</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="incidence-list-interface">
@@ -234,14 +235,15 @@ end</pre>
 </dd></dl>
 
 <p>The following example prints all vertices of a graph as well as its incidence edges</p>
-<div class="highlight-python"><pre>for u in vertices(g)
-    print("$u: ")
-    for e in out_edges(u, g)
-        v = target(e, g)
-        println("($u -- $v) ")
-    end
-    println()
-end</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="k">for</span> <span class="n">u</span> <span class="ow">in</span> <span class="n">vertices</span><span class="p">(</span><span class="n">g</span><span class="p">)</span>
+    <span class="k">print</span><span class="p">(</span><span class="s">&quot;$u: &quot;</span><span class="p">)</span>
+    <span class="k">for</span> <span class="n">e</span> <span class="ow">in</span> <span class="n">out_edges</span><span class="p">(</span><span class="n">u</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+        <span class="n">v</span> <span class="o">=</span> <span class="n">target</span><span class="p">(</span><span class="n">e</span><span class="p">,</span> <span class="n">g</span><span class="p">)</span>
+        <span class="n">println</span><span class="p">(</span><span class="s">&quot;($u -- $v) &quot;</span><span class="p">)</span>
+    <span class="n">end</span>
+    <span class="n">println</span><span class="p">()</span>
+<span class="n">end</span>
+</pre></div>
 </div>
 </div>
 <div class="section" id="bidirectional-incidence-list-interface">
@@ -264,11 +266,13 @@ end</pre>
 <h2>Interface declaration and verification<a class="headerlink" href="#interface-declaration-and-verification" title="Permalink to this headline">¶</a></h2>
 <p>It is important to note that a specific graph type can implement multiple interfaces. If a method is required to be implemented for two interfaces (<em>e.g.</em>, <tt class="docutils literal"><span class="pre">out_degree</span></tt> in both adjacency list an incidence list), this method need only be implemented once.</p>
 <p>Julia does not provide a builtin mechanism for interface declaration. To declare that a specific graph type implements certain interfaces, one can use the macro <tt class="docutils literal"><span class="pre">&#64;graph_implements</span></tt>. For example, to declare that a graph type <tt class="docutils literal"><span class="pre">G</span></tt> implements vertex list and adjacency list, one can write:</p>
-<div class="highlight-python"><pre>@graph_implements G vertex_list adjacency_list</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="nd">@graph_implements</span> <span class="n">G</span> <span class="n">vertex_list</span> <span class="n">adjacency_list</span>
+</pre></div>
 </div>
 <p>This statement instantiates the following methods:</p>
-<div class="highlight-python"><pre>implements_vertex_list(::G) = true
-implements_adjacency_list(::G) = true</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">implements_vertex_list</span><span class="p">(::</span><span class="n">G</span><span class="p">)</span> <span class="o">=</span> <span class="n">true</span>
+<span class="n">implements_adjacency_list</span><span class="p">(::</span><span class="n">G</span><span class="p">)</span> <span class="o">=</span> <span class="n">true</span>
+</pre></div>
 </div>
 <p>The following is a list of supported interface names</p>
 <ul class="simple">
@@ -282,10 +286,11 @@ implements_adjacency_list(::G) = true</pre>
 <li><tt class="docutils literal"><span class="pre">bidirectional_incidence_list</span></tt></li>
 </ul>
 <p>In a function that implements a generic graph algorithm, one can use the macro <tt class="docutils literal"><span class="pre">&#64;graph_requires</span></tt> to verify whether the input graph implements the required interfaces. A typical graph algorithm function may look like follows</p>
-<div class="highlight-python"><pre>function myfunc(g::AbstractGraph, params)
-    @graph_requires g vertex_list adjacency_list
-    ...
-end</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">function</span> <span class="n">myfunc</span><span class="p">(</span><span class="n">g</span><span class="p">::</span><span class="n">AbstractGraph</span><span class="p">,</span> <span class="n">params</span><span class="p">)</span>
+    <span class="nd">@graph_requires</span> <span class="n">g</span> <span class="n">vertex_list</span> <span class="n">adjacency_list</span>
+    <span class="o">...</span>
+<span class="n">end</span>
+</pre></div>
 </div>
 <p>Here, the <tt class="docutils literal"><span class="pre">&#64;graph_requires</span></tt> statement checks whether the graph <tt class="docutils literal"><span class="pre">g</span></tt> implements the interfaces for <tt class="docutils literal"><span class="pre">vertex_list</span></tt> and <tt class="docutils literal"><span class="pre">adjacency_list</span></tt>, and throws exceptions if <tt class="docutils literal"><span class="pre">g</span></tt> does not satisfy the requirements.</p>
 </div>
@@ -309,12 +314,12 @@ end</pre>
         <li class="right" >
           <a href="overview.html" title="Main Features"
              >previous</a> |</li>
-        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Graphs.jl 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Dahua Lin.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+        &copy; Copyright 2013, Dahua Lin and contributors to the package..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

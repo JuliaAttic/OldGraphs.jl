@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Vertices and Edges &mdash; Graphs.jl 0.2 documentation</title>
+    <title>Vertices and Edges &mdash; Graphs.jl 0.3 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.2',
+        VERSION:     '0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="top" title="Graphs.jl 0.3 documentation" href="index.html" />
     <link rel="next" title="Graph Types" href="graphs.html" />
     <link rel="prev" title="Generic Interfaces" href="interface.html" /> 
   </head>
@@ -42,7 +42,7 @@
         <li class="right" >
           <a href="interface.html" title="Generic Interfaces"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Graphs.jl 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -94,18 +94,20 @@
 <h2>Vertex Types<a class="headerlink" href="#vertex-types" title="Permalink to this headline">¶</a></h2>
 <p>A vertex can be of any Julia type. For example, it can be an integer, a character, or a string. In a simplistic setting where there is additional information associated with a vertex, it is recommended to use <tt class="docutils literal"><span class="pre">Int</span></tt> as the vertex type, which would lead to the best performance.</p>
 <p>This package provides two specific vertex types: <tt class="docutils literal"><span class="pre">KeyVertex</span></tt> and <tt class="docutils literal"><span class="pre">ExVertex</span></tt>. The definition of <tt class="docutils literal"><span class="pre">KeyVertex</span></tt> is:</p>
-<div class="highlight-python"><pre>immutable KeyVertex{K}
-    index::Int
-    key::K
-end</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">immutable</span> <span class="n">KeyVertex</span><span class="p">{</span><span class="n">K</span><span class="p">}</span>
+    <span class="n">index</span><span class="p">::</span><span class="n">Int</span>
+    <span class="n">key</span><span class="p">::</span><span class="n">K</span>
+<span class="n">end</span>
+</pre></div>
 </div>
 <p>Here, each vertex has a unique index and a key value of a user-chosen type (<em>e.g.</em> a string).</p>
 <p>The definition of <tt class="docutils literal"><span class="pre">ExVertex</span></tt> is:</p>
-<div class="highlight-python"><pre>type ExVertex
-    index::Int
-    label::UTF8String
-    attributes::Dict{UTF8String,Any}
-end</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">type</span> <span class="n">ExVertex</span>
+    <span class="n">index</span><span class="p">::</span><span class="n">Int</span>
+    <span class="n">label</span><span class="p">::</span><span class="n">UTF8String</span>
+    <span class="n">attributes</span><span class="p">::</span><span class="n">Dict</span><span class="p">{</span><span class="n">UTF8String</span><span class="p">,</span><span class="n">Any</span><span class="p">}</span>
+<span class="n">end</span>
+</pre></div>
 </div>
 <p>The <tt class="docutils literal"><span class="pre">ExVertex</span></tt> type allows one to attach a label as well as other attributes to a vertex. The constructor of this type takes an index and a label string as arguments. The following code shows how one can create an instance of <tt class="docutils literal"><span class="pre">ExVertex</span></tt> and attach a price to it.</p>
 <div class="highlight-python"><div class="highlight"><pre><span class="n">v</span> <span class="o">=</span> <span class="n">ExVertex</span><span class="p">(</span><span class="mi">1</span><span class="p">,</span> <span class="s">&quot;vertex-a&quot;</span><span class="p">)</span>
@@ -120,7 +122,8 @@ end</pre>
 </dd></dl>
 
 <p>In addition, for integers, we have</p>
-<div class="highlight-python"><pre>vertex_index(v::Integer) = v</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="n">vertex_index</span><span class="p">(</span><span class="n">v</span><span class="p">::</span><span class="n">Integer</span><span class="p">)</span> <span class="o">=</span> <span class="n">v</span>
+</pre></div>
 </div>
 <p>This makes it convenient to use integers as vertices in graphs.</p>
 </div>
@@ -128,21 +131,23 @@ end</pre>
 <h2>Edge Types<a class="headerlink" href="#edge-types" title="Permalink to this headline">¶</a></h2>
 <p>This package provides two edge types: <tt class="docutils literal"><span class="pre">Edge</span></tt> and <tt class="docutils literal"><span class="pre">ExEdge</span></tt>. The former is a basic edge type that simply encapsulates the source and target vertices of an edge, while the latter allows one to specify attributes.</p>
 <p>The definition of <tt class="docutils literal"><span class="pre">Edge</span></tt> is given by</p>
-<div class="highlight-python"><pre>immutable Edge{V}
-    index::Int
-    source::V
-    target::V
-end
+<div class="highlight-python"><div class="highlight"><pre><span class="n">immutable</span> <span class="n">Edge</span><span class="p">{</span><span class="n">V</span><span class="p">}</span>
+    <span class="n">index</span><span class="p">::</span><span class="n">Int</span>
+    <span class="n">source</span><span class="p">::</span><span class="n">V</span>
+    <span class="n">target</span><span class="p">::</span><span class="n">V</span>
+<span class="n">end</span>
 
-typealias IEdge Edge{Int}</pre>
+<span class="n">typealias</span> <span class="n">IEdge</span> <span class="n">Edge</span><span class="p">{</span><span class="n">Int</span><span class="p">}</span>
+</pre></div>
 </div>
 <p>The definition of <tt class="docutils literal"><span class="pre">ExEdge</span></tt> is given by</p>
-<div class="highlight-python"><pre>type ExEdge{V}
-    index::Int
-    source::V
-    target::V
-    attributes::Dict{UTF8String,Any}
-end</pre>
+<div class="highlight-python"><div class="highlight"><pre><span class="nb">type</span> <span class="n">ExEdge</span><span class="p">{</span><span class="n">V</span><span class="p">}</span>
+    <span class="n">index</span><span class="p">::</span><span class="n">Int</span>
+    <span class="n">source</span><span class="p">::</span><span class="n">V</span>
+    <span class="n">target</span><span class="p">::</span><span class="n">V</span>
+    <span class="n">attributes</span><span class="p">::</span><span class="n">Dict</span><span class="p">{</span><span class="n">UTF8String</span><span class="p">,</span><span class="n">Any</span><span class="p">}</span>
+<span class="n">end</span>
+</pre></div>
 </div>
 <p><tt class="docutils literal"><span class="pre">ExEdge</span></tt> has two constructors, one takes <tt class="docutils literal"><span class="pre">index</span></tt>, <tt class="docutils literal"><span class="pre">source</span></tt>, and <tt class="docutils literal"><span class="pre">target</span></tt> as arguments, while the other use all four fields.</p>
 <p>One can either construct an edge directly using the constructors, or use the <tt class="docutils literal"><span class="pre">add_edge</span></tt> methods for graphs, which can automatically assign an index to a new edge.</p>
@@ -165,6 +170,7 @@ end</pre>
 <dd><p>returns the target vertex of the edge <tt class="docutils literal"><span class="pre">e</span></tt>.</p>
 </dd></dl>
 
+<p>A custom edge type <tt class="docutils literal"><span class="pre">E{V}</span></tt> which is constructible by <tt class="docutils literal"><span class="pre">E(index::Int,</span> <span class="pre">s::V,</span> <span class="pre">t::V)</span></tt> and implements the above methods is usable in the <tt class="docutils literal"><span class="pre">VectorIncidenceList</span></tt> parametric type.  Construct such a list with <tt class="docutils literal"><span class="pre">inclist(V,E{V})</span></tt>, where E and V are your vertex and edge types.  See test/inclist.jl for an example.</p>
 </div>
 </div>
 
@@ -186,12 +192,12 @@ end</pre>
         <li class="right" >
           <a href="interface.html" title="Generic Interfaces"
              >previous</a> |</li>
-        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Graphs.jl 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Dahua Lin.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+        &copy; Copyright 2013, Dahua Lin and contributors to the package..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>

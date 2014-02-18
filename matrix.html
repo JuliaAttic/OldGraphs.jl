@@ -8,7 +8,7 @@
   <head>
     <meta http-equiv="Content-Type" content="text/html; charset=utf-8" />
     
-    <title>Matrix Representation &mdash; Graphs.jl 0.2 documentation</title>
+    <title>Matrix Representation &mdash; Graphs.jl 0.3 documentation</title>
     
     <link rel="stylesheet" href="_static/sphinxdoc.css" type="text/css" />
     <link rel="stylesheet" href="_static/pygments.css" type="text/css" />
@@ -16,7 +16,7 @@
     <script type="text/javascript">
       var DOCUMENTATION_OPTIONS = {
         URL_ROOT:    '',
-        VERSION:     '0.2',
+        VERSION:     '0.3',
         COLLAPSE_INDEX: false,
         FILE_SUFFIX: '.html',
         HAS_SOURCE:  true
@@ -25,7 +25,7 @@
     <script type="text/javascript" src="_static/jquery.js"></script>
     <script type="text/javascript" src="_static/underscore.js"></script>
     <script type="text/javascript" src="_static/doctools.js"></script>
-    <link rel="top" title="Graphs.jl 0.2 documentation" href="index.html" />
+    <link rel="top" title="Graphs.jl 0.3 documentation" href="index.html" />
     <link rel="prev" title="Graph Algorithms" href="algorithms.html" /> 
   </head>
   <body>
@@ -38,7 +38,7 @@
         <li class="right" >
           <a href="algorithms.html" title="Graph Algorithms"
              accesskey="P">previous</a> |</li>
-        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Graphs.jl 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
       <div class="sphinxsidebar">
@@ -48,6 +48,7 @@
 <li><a class="reference internal" href="#">Matrix Representation</a><ul>
 <li><a class="reference internal" href="#adjacency-matrix">Adjacency Matrix</a></li>
 <li><a class="reference internal" href="#weight-matrix">Weight Matrix</a></li>
+<li><a class="reference internal" href="#distance-matrix">Distance Matrix</a></li>
 <li><a class="reference internal" href="#laplacian-matrix">Laplacian Matrix</a></li>
 </ul>
 </li>
@@ -95,13 +96,7 @@
 \end{cases}"/></p>
 </div><dl class="function">
 <dt id="adjacency_matrix">
-<tt class="descname">adjacency_matrix</tt><big>(</big><em>is_directed</em>, <em>n</em>, <em>edges</em><big>)</big><a class="headerlink" href="#adjacency_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs an adjacency matrix from a list of edges (over <tt class="docutils literal"><span class="pre">n</span></tt> vertices).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descname">adjacency_matrix</tt><big>(</big><em>graph</em><big>)</big></dt>
+<tt class="descname">adjacency_matrix</tt><big>(</big><em>graph</em><big>)</big><a class="headerlink" href="#adjacency_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs an adjacency matrix for a graph.</p>
 </dd></dl>
 
@@ -116,14 +111,24 @@
 \end{cases}"/></p>
 </div><dl class="function">
 <dt id="weight_matrix">
-<tt class="descname">weight_matrix</tt><big>(</big><em>is_directed</em>, <em>n</em>, <em>edges</em>, <em>eweights</em><big>)</big><a class="headerlink" href="#weight_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a weight matrix from a list of edges and a vector of edge weights.</p>
+<tt class="descname">weight_matrix</tt><big>(</big><em>graph</em>, <em>eweights</em><big>)</big><a class="headerlink" href="#weight_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a weight matrix from a graph and a vector of edge weights. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must implement <tt class="docutils literal"><span class="pre">edge_map</span></tt> and (<tt class="docutils literal"><span class="pre">edge_list</span></tt> or <tt class="docutils literal"><span class="pre">incidence_list</span></tt>).</p>
 </dd></dl>
 
-<dl class="function">
-<dt>
-<tt class="descname">weight_matrix</tt><big>(</big><em>graph</em>, <em>eweights</em><big>)</big></dt>
-<dd><p>Constructs a weight matrix from a graph and a vector of edge weights. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must implement <tt class="docutils literal"><span class="pre">edge_map</span></tt> and (<tt class="docutils literal"><span class="pre">edge_list</span></tt> or <tt class="docutils literal"><span class="pre">incidence_list</span></tt>).</p>
+</div>
+<div class="section" id="distance-matrix">
+<h2>Distance Matrix<a class="headerlink" href="#distance-matrix" title="Permalink to this headline">¶</a></h2>
+<p>A <em>distance matrix</em> is defined as</p>
+<div class="math">
+<p><img src="_images/math/dddb5278ddb836f75f3ccad20064f96b9f22aaf3.png" alt="W(u, v) = \begin{cases}
+    0 &amp; u = v \\
+    w(e) &amp; u \ne v \text{ and } \{u, v\} \in E \\
+    Inf &amp; \text{otherwise}
+\end{cases}"/></p>
+</div><dl class="function">
+<dt id="distance_matrix">
+<tt class="descname">distance_matrix</tt><big>(</big><em>graph</em>, <em>eweights</em><big>)</big><a class="headerlink" href="#distance_matrix" title="Permalink to this definition">¶</a></dt>
+<dd><p>Constructs a distance matrix from a graph and a vector of edge weights. Here, <tt class="docutils literal"><span class="pre">g</span></tt> must implement <tt class="docutils literal"><span class="pre">edge_map</span></tt> and (<tt class="docutils literal"><span class="pre">edge_list</span></tt> or <tt class="docutils literal"><span class="pre">incidence_list</span></tt>).</p>
 </dd></dl>
 
 </div>
@@ -138,23 +143,11 @@
 \end{cases}"/></p>
 </div><dl class="function">
 <dt id="laplacian_matrix">
-<tt class="descname">laplacian_matrix</tt><big>(</big><em>n</em>, <em>edges</em><big>)</big><a class="headerlink" href="#laplacian_matrix" title="Permalink to this definition">¶</a></dt>
-<dd><p>Constructs a Laplacian matrix from a list of edges (over <tt class="docutils literal"><span class="pre">n</span></tt> vertices).</p>
-</dd></dl>
-
-<dl class="function">
-<dt>
-<tt class="descname">laplacian_matrix</tt><big>(</big><em>graph</em><big>)</big></dt>
+<tt class="descname">laplacian_matrix</tt><big>(</big><em>graph</em><big>)</big><a class="headerlink" href="#laplacian_matrix" title="Permalink to this definition">¶</a></dt>
 <dd><p>Constructs a Laplacian matrix over an undirected graph.</p>
 </dd></dl>
 
 <p>For graphs with weighted edges, we have</p>
-<dl class="function">
-<dt>
-<tt class="descname">laplacian_matrix</tt><big>(</big><em>n</em>, <em>edges</em>, <em>eweights</em><big>)</big></dt>
-<dd><p>Constructs a weighted Laplacian matrix from a list of edges together with a vector of edge weights.</p>
-</dd></dl>
-
 <dl class="function">
 <dt>
 <tt class="descname">laplacian_matrix</tt><big>(</big><em>graph</em>, <em>eweights</em><big>)</big></dt>
@@ -179,12 +172,12 @@
         <li class="right" >
           <a href="algorithms.html" title="Graph Algorithms"
              >previous</a> |</li>
-        <li><a href="index.html">Graphs.jl 0.2 documentation</a> &raquo;</li> 
+        <li><a href="index.html">Graphs.jl 0.3 documentation</a> &raquo;</li> 
       </ul>
     </div>
     <div class="footer">
-        &copy; Copyright 2013, Dahua Lin.
-      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.2.
+        &copy; Copyright 2013, Dahua Lin and contributors to the package..
+      Created using <a href="http://sphinx.pocoo.org/">Sphinx</a> 1.1.3.
     </div>
   </body>
 </html>
