@@ -17,12 +17,12 @@ end
 # SimpleGraph:
 #   V:          Int
 #   E:          IEdge
-#   VList:      Range1{Int}
+#   VList:      Vector{Int}
 #   EList:      Vector{IEdge}
 #   AdjList:    Vector{Vector{Int}}
 #   IncList:    Vector{Vector{IEdge}}
 #
-typealias SimpleGraph GenericGraph{Int,IEdge,Range1{Int},Vector{IEdge},Vector{Vector{IEdge}}}
+typealias SimpleGraph GenericGraph{Int,IEdge,Vector{Int},Vector{IEdge},Vector{Vector{IEdge}}}
 
 typealias Graph{V,E} GenericGraph{V,E,Vector{V},Vector{E},Vector{Vector{E}}}
 
@@ -30,7 +30,7 @@ typealias Graph{V,E} GenericGraph{V,E,Vector{V},Vector{E},Vector{Vector{E}}}
 
 simple_graph(n::Integer; is_directed::Bool=true) = 
     SimpleGraph(is_directed,  
-                1:int(n),  # vertices
+                [1:int(n)],  # vertices
                 IEdge[],   # edges 
                 multivecs(IEdge, n), # finclist
                 multivecs(IEdge, n)) # binclist

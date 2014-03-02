@@ -75,6 +75,11 @@ es = [  add_edge!(sgd, 1, 2)
 @test collect(in_neighbors(3, sgd)) == [1]
 @test collect(in_neighbors(4, sgd)) == [2, 3]
 
+# adding edges
+
+@test add_vertex!(sgd, 5) == 5
+@test num_vertices(sgd) == 5
+
 
 #################################################
 #
@@ -133,6 +138,10 @@ rs = [revedge(e) for e in es]
 @test collect(in_neighbors(3, sgu)) == [1, 4]
 @test collect(in_neighbors(4, sgu)) == [2, 3, 1]
 
+# adding edges
+
+@test add_vertex!(sgu, 5) == 5
+@test num_vertices(sgu) == 5
 
 #################################################
 #
