@@ -51,3 +51,12 @@ let g = watts_strogatz_graph(n, k, beta)
 	@test num_edges(g) == n*(k/2)
 	@test num_vertices(g) == n
 end
+
+
+# Niche model
+S = 10
+C = 0.2
+let g = niche_model_graph(S, C)
+   @test num_vertices(g) == S
+end
+

@@ -1,5 +1,6 @@
 module Graphs
     using DataStructures
+    using Distributions
     
     import Base: start, done, next, show, ==
     import Base: length, isempty, size, getindex, isless
@@ -89,7 +90,7 @@ module Graphs
         to_dot, plot,
         
         # Random Graph Generation
-        erdos_renyi_graph, watts_strogatz_graph
+        erdos_renyi_graph, watts_strogatz_graph, niche_model_graph
         
     include("concepts.jl")
     include("common.jl")
