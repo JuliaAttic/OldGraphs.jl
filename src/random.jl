@@ -77,10 +77,10 @@ end
 #   S: the number of species
 #   C: the expected connectance (/density)
 
-function niche_model_graph{GT<:AbstractGraph}(g::GT, S::Integer, C::Real)
-   n = Array(Real, S)
-   r = Array(Real, S)
-   c = Array(Real, S)
+function niche_model_graph{T<:Real, GT<:AbstractGraph}(g::GT, S::Integer, C::T)
+   n = Array(T, S)
+   r = Array(T, S)
+   c = Array(T, S)
    # Loop 1 to get the species traits
    for i in 1:S
       n[i] = rand(Uniform())
