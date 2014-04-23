@@ -51,3 +51,15 @@ let g = watts_strogatz_graph(n, k, beta)
 	@test num_edges(g) == n*(k/2)
 	@test num_vertices(g) == n
 end
+
+
+# Barabási–Albert scale-free graphs
+ 
+n = 100
+m = 2
+let g = barabasi_albert_graph(n, m)
+	@test num_vertices(g) == n
+	@test num_edges(g) == n*m - sum(1:m)
+	@test !is_directed(g)
+end
+
