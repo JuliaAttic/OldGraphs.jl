@@ -99,3 +99,89 @@ end
 add_edge!{V,E}(g::GenericGraph{V,E}, e::E) = add_edge!(g, source(e, g), target(e, g), e)
 add_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V) = add_edge!(g, u, v, make_edge(g, u, v))
 
+
+# Ad-hoc vertex/edge removers below
+
+# Naive general case
+function remove_edge!{V, E}(g::GenericGraph{V, E}, u::V, v::V, e::E)
+  @assert e in edges(g) && source(e, g) == u && target(e, g) == v
+  ei = edge_index(e, g)::Int
+  ui = vertex_index(u, g)::Int
+  vi = vertex_index(v, g)::Int
+
+  # A desperate attempt at shaving off runtime
+  if vertex_type(g) == Int64 || vertex_type(g) == Float64
+    f_index = binary_search(g.finclist[ui], e)
+    b_index = binary_search(g.binclist[vi], e)
+  else
+    for i = 1:length(g.finclist[ui])
+      if g.finclist[ui][i] == e
+        f_index = i
+        break
+      end # if
+    end # for
+
+    for j = 1:length(g.binclist[vi])
+      if g.binclist[vi][j] == e
+        b_index = j
+        break
+      end # if
+    end # for
+  end # if-else
+
+
+  splice!(g.edges, ei)
+  splice!(g.finclist[ui], f_index)
+  splice!(g.binclist[vi], b_index)
+
+  if !g.is_directed
+    rev_e = revedge(e)
+    for i = 1:length(g.finclist[ui])
+      if g.finclist[ui][i] == rev_e
+        f_index = i
+        break
+      end # if
+    end # for
+
+    for j = 1:length(g.binclist[vi])
+      if g.binclist[vi][j] == rev_e
+        b_index = j
+        break
+      end # if
+    end # for
+
+    splice!(g.finclist[ui], f_index)
+    splice!(g.binclist[vi], b_index)
+  end # if
+end
+
+
+# Needed since edge indexing is not unique. That is, if e = edge(1, 2) is in graph g, then e != make_edge(g, 1, 2).
+function remove_edge!{V, E}(g::GenericGraph{V, E}, u::V, v::V)
+  for edge in g.edges
+    if source(edge, g) == u && target(edge, g) == v
+      uv_edge = edge
+      break
+    end # if
+  end #for
+  remove_edge!(g, u, v, uv_edge)
+end
+
+
+remove_edge!{V, E}(g::GenericGraph{V,E}, e::E) = remove_edge!(g, source(e, g), target(e, g))
+
+
+function remove_vertex!{V, E}(g::GenericGraph{V, E}, v::V, remove_edges=true)
+  @assert v in vertices(g)
+  vi = vertex_index(v, g)
+  splice!(vertices(g), vi)
+
+  # remove all edges containing v (VERY Inefficient)
+  if remove_edges
+    for edge in edges(g)
+      if source(edge, g) == v || target(edge, g) == v
+        remove_edge!(g, edge)
+      end # if
+    end #for
+  end # if
+end
