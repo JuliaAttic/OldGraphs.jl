@@ -109,26 +109,19 @@ function remove_edge!{V, E}(g::GenericGraph{V, E}, u::V, v::V, e::E)
   ui = vertex_index(u, g)::Int
   vi = vertex_index(v, g)::Int
 
-  # A desperate attempt at shaving off runtime
-  if vertex_type(g) == Int64 || vertex_type(g) == Float64
-    f_index = binary_search(g.finclist[ui], e)
-    b_index = binary_search(g.binclist[vi], e)
-  else
-    for i = 1:length(g.finclist[ui])
-      if g.finclist[ui][i] == e
-        f_index = i
-        break
-      end # if
-    end # for
+  for i = 1:length(g.finclist[ui])
+    if g.finclist[ui][i] == e
+      f_index = i
+      break
+    end # if
+  end # for
 
-    for j = 1:length(g.binclist[vi])
-      if g.binclist[vi][j] == e
-        b_index = j
-        break
-      end # if
-    end # for
-  end # if-else
-
+  for j = 1:length(g.binclist[vi])
+    if g.binclist[vi][j] == e
+      b_index = j
+      break
+    end # if
+  end # for
 
   splice!(g.edges, ei)
   splice!(g.finclist[ui], f_index)
