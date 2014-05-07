@@ -103,8 +103,8 @@ add_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V) = add_edge!(g, u, v, make_edge(
 # Ad-hoc vertex/edge removers below
 
 # Naive general case
-function remove_edge!{V, E}(g::GenericGraph{V, E}, u::V, v::V, e::E)
-  @assert e in edges(g) && source(e, g) == u && target(e, g) == v
+function remove_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V, e::E)
+  @assert e in g.edges && source(e, g) == u && target(e, g) == v
   ei = edge_index(e, g)::Int
   ui = vertex_index(u, g)::Int
   vi = vertex_index(v, g)::Int
@@ -150,7 +150,7 @@ end
 
 
 # Needed since edge indexing is not unique. That is, if e = edge(1, 2) is in graph g, then e != make_edge(g, 1, 2).
-function remove_edge!{V, E}(g::GenericGraph{V, E}, u::V, v::V)
+function remove_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V)
   for edge in g.edges
     if source(edge, g) == u && target(edge, g) == v
       uv_edge = edge
@@ -161,17 +161,17 @@ function remove_edge!{V, E}(g::GenericGraph{V, E}, u::V, v::V)
 end
 
 
-remove_edge!{V, E}(g::GenericGraph{V,E}, e::E) = remove_edge!(g, source(e, g), target(e, g))
+remove_edge!{V,E}(g::GenericGraph{V,E}, e::E) = remove_edge!(g, source(e, g), target(e, g))
 
 
-function remove_vertex!{V, E}(g::GenericGraph{V, E}, v::V, remove_edges=true)
-  @assert v in vertices(g)
+function remove_vertex!{V,E}(g::GenericGraph{V,E}, v::V, remove_edges=true)
+  @assert v in g.vertices
   vi = vertex_index(v, g)
-  splice!(vertices(g), vi)
+  splice!(g.vertices, vi)
 
   # remove all edges containing v (VERY Inefficient)
   if remove_edges
-    for edge in edges(g)
+    for edge in g.edges
       if source(edge, g) == v || target(edge, g) == v
         remove_edge!(g, edge)
       end # if
