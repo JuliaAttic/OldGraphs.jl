@@ -164,18 +164,14 @@ end
 remove_edge!{V,E}(g::GenericGraph{V,E}, e::E) = remove_edge!(g, source(e, g), target(e, g))
 
 
-function remove_vertex!{V,E}(g::GenericGraph{V,E}, v::V, remove_edges=true)
+function remove_vertex!{V,E}(g::GenericGraph{V,E}, v::V)
   @assert v in g.vertices
   vi = vertex_index(v, g)
   splice!(g.vertices, vi)
 
-  # remove all edges containing v (VERY Inefficient)
-  # Should the user even have a choice to remove edges?
-  if remove_edges
-    for edge in g.edges
-      if source(edge, g) == v || target(edge, g) == v
-        remove_edge!(g, edge)
-      end # if
-    end #for
-  end # if
+  for edge in g.edges
+    if source(edge, g) == v || target(edge, g) == v
+      remove_edge!(g, edge)
+    end # if
+  end #for
 end
