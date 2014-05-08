@@ -33,6 +33,8 @@ module Graphs
         
         add_edge!, add_vertex!, add_edges!, add_vertices!,
 
+        remove_edge!, remove_vertex!,
+
         # edge_list
         GenericEdgeList, EdgeList, simple_edgelist, edgelist,
     
