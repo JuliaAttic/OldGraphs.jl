@@ -111,40 +111,36 @@ function remove_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V, e::E)
 
   for i = 1:length(g.finclist[ui])
     if g.finclist[ui][i] == e
-      f_index = i
+      splice!(g.finclist[ui], i)
       break
     end # if
   end # for
 
   for j = 1:length(g.binclist[vi])
     if g.binclist[vi][j] == e
-      b_index = j
+      splice!(g.binclist[vi], j)
       break
     end # if
   end # for
 
   splice!(g.edges, ei)
-  splice!(g.finclist[ui], f_index)
-  splice!(g.binclist[vi], b_index)
 
   if !g.is_directed
     rev_e = revedge(e)
     for i = 1:length(g.finclist[ui])
       if g.finclist[ui][i] == rev_e
-        f_index = i
+        splice!(g.finclist[ui], i)
         break
       end # if
     end # for
 
     for j = 1:length(g.binclist[vi])
       if g.binclist[vi][j] == rev_e
-        b_index = j
+        splice!(g.binclist[vi], j)
         break
       end # if
     end # for
 
-    splice!(g.finclist[ui], f_index)
-    splice!(g.binclist[vi], b_index)
   end # if
 end
 
@@ -153,11 +149,10 @@ end
 function remove_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V)
   for edge in g.edges
     if source(edge, g) == u && target(edge, g) == v
-      uv_edge = edge
+      remove_edge!(g, u, v, edge)
       break
     end # if
   end #for
-  remove_edge!(g, u, v, uv_edge)
 end
 
 
