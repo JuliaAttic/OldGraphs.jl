@@ -4,6 +4,18 @@
 #
 ##########################################################
 
+function intersectinto{V}(ret::Set{V}, s::Set{V}, s1::Set{V})
+    i = empty!(ret)
+    for x in s
+       if in(x,s1)
+          push!(i,x)
+        end
+    end
+    return i
+end
+
+
+
 function maximal_cliques{V}(g::AbstractGraph{V})
     """
     Finds all maximal cliques of an undirected graph.
@@ -28,12 +40,18 @@ function maximal_cliques{V}(g::AbstractGraph{V})
 
     # Cache nbrs and find first pivot (highest degree)
     maxconn = -1
-    nnbrs = Dict()
-    pivotnbrs = Set() # handle empty graph
-    pivotdonenbrs = Set()  # initialize
+    nnbrs = Dict{V,Set{V}}()
+    pivotnbrs = Set{V}() # handle empty graph
+    pivotdonenbrs = Set{V}()  # initialize
+    # scratch variables
+    new_cand = Set{V}()
+    new_done = Set{V}()
+    cn = Set{V}()
+
+
 
     for n in vertices(g)
-        nbrs = Set()
+        nbrs = Set{V}()
         union!(nbrs, out_neighbors(n, g))
         delete!(nbrs, n) # ignore edges between n and itself
         conn = length(nbrs)
@@ -47,11 +65,11 @@ function maximal_cliques{V}(g::AbstractGraph{V})
     end
 
     # Initial setup
-    cand = Set()
+    cand = Set{V}()
     union!(cand, keys(nnbrs))
     smallcand = setdiff(cand, pivotnbrs)
-    done = Set()
-    stack = (Set, Set, Set)[]
+    done = Set{V}()
+    stack = (Set{V}, Set{V}, Set{V})[]
     clique_so_far = V[]
     cliques = Array{V}[]
 
@@ -70,8 +88,8 @@ function maximal_cliques{V}(g::AbstractGraph{V})
         delete!(cand, n)
         push!(done, n)
         nn = nnbrs[n]
-        new_cand = intersect(cand, nn)
-        new_done = intersect(done, nn)
+        intersectinto(new_cand, cand, nn)
+        intersectinto(new_done, done, nn)
         # check if we have more to search
         if isempty(new_cand)
             if isempty(new_done)
@@ -92,7 +110,7 @@ function maximal_cliques{V}(g::AbstractGraph{V})
         numb_cand = length(new_cand)
         maxconndone = -1
         for n in new_done
-            cn = intersect(new_cand, nnbrs[n])
+            intersectinto(cn, new_cand, nnbrs[n])
             conn = length(cn)
             if conn > maxconndone
                 pivotdonenbrs = cn
@@ -111,7 +129,7 @@ function maximal_cliques{V}(g::AbstractGraph{V})
         # look in cand nodes second
         maxconn = -1
         for n in new_cand
-            cn = intersect(new_cand, nnbrs[n])
+            intersectinto(cn, new_cand, nnbrs[n])
             conn = length(cn)
             if conn > maxconn
                 pivotnbrs = cn
@@ -133,3 +151,4 @@ function maximal_cliques{V}(g::AbstractGraph{V})
     end
     cliques
 end
+
