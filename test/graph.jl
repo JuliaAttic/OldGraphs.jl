@@ -77,6 +77,11 @@ es = [  add_edge!(sgd, 1, 2)
 @test collect(in_neighbors(3, sgd)) == [1]
 @test collect(in_neighbors(4, sgd)) == [2, 3]
 
+remove_edge!(sgd, 1, 3)
+remove_edge!(sgd, 2, 4)
+
+@test num_edges(sgd) == 2
+
 
 @test collect_edges(sgd) == [Edge(1,1,2), Edge(2,1,3), Edge(3,2,4), Edge(4,3,4)]
 #################################################
@@ -135,6 +140,12 @@ rs = [revedge(e) for e in es]
 @test collect(in_neighbors(2, sgu)) == [1, 4]
 @test collect(in_neighbors(3, sgu)) == [1, 4]
 @test collect(in_neighbors(4, sgu)) == [2, 3, 1]
+
+remove_edge!(sgu, 2, 4)
+remove_edge!(sgu, 3, 4)
+remove_edge!(sgu, 4, 1)
+
+@test num_edges(sgu) == 2
 
 
 #################################################

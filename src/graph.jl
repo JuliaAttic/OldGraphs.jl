@@ -99,3 +99,78 @@ end
 add_edge!{V,E}(g::GenericGraph{V,E}, e::E) = add_edge!(g, source(e, g), target(e, g), e)
 add_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V) = add_edge!(g, u, v, make_edge(g, u, v))
 
+
+# Ad-hoc vertex/edge removers below
+
+# Naive general case
+function remove_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V, e::E)
+  @assert e in g.edges && source(e, g) == u && target(e, g) == v
+  ei = edge_index(e, g)::Int
+  ui = vertex_index(u, g)::Int
+  vi = vertex_index(v, g)::Int
+
+  for i = 1:length(g.finclist[ui])
+    if g.finclist[ui][i] == e
+      splice!(g.finclist[ui], i)
+      break
+    end # if
+  end # for
+
+  for j = 1:length(g.binclist[vi])
+    if g.binclist[vi][j] == e
+      splice!(g.binclist[vi], j)
+      break
+    end # if
+  end # for
+
+  splice!(g.edges, ei)
+
+  if !g.is_directed
+    rev_e = revedge(e)
+    println("A ", rev_e)
+    for i = 1:length(g.finclist[vi])
+      println("B ", g.finclist[vi][i])
+      if g.finclist[vi][i] == rev_e
+        splice!(g.finclist[vi], i)
+        println("removed edge at index ", i)
+        break
+      end # if
+    end # for
+
+    for j = 1:length(g.binclist[ui])
+      println("C ", g.binclist[ui][j])
+      if g.binclist[ui][j] == rev_e
+        splice!(g.binclist[ui], j)
+        println("removed edge at index ", j)
+        break
+      end # if
+    end # for
+  end # if
+end
+
+
+# Needed since edge indexing is not unique. That is, if e = edge(1, 2) is in graph g, then e != make_edge(g, 1, 2).
+function remove_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V)
+  for edge in g.edges
+    if source(edge, g) == u && target(edge, g) == v
+      remove_edge!(g, u, v, edge)
+      break
+    end # if
+  end #for
+end
+
+
+remove_edge!{V,E}(g::GenericGraph{V,E}, e::E) = remove_edge!(g, source(e, g), target(e, g))
+
+
+function remove_vertex!{V,E}(g::GenericGraph{V,E}, v::V)
+  @assert v in g.vertices
+  vi = vertex_index(v, g)
+  splice!(g.vertices, vi)
+
+  for edge in g.edges
+    if source(edge, g) == v || target(edge, g) == v
+      remove_edge!(g, edge)
+    end # if
+  end #for
+end
