@@ -37,6 +37,13 @@ module Graphs
         ConstantEdgePropertyInspector, AttributeEdgePropertyInspector,
         edge_property, edge_property_requirement,
 
+        AbstractVertexPropertyInspector, ConstantVertexPropertyInspector,
+        FunctionVertexPropertyInspector, VectorVertexPropertyInspector,
+        vertex_property_requirement, vertex_property,
+
+        AbstractVertexColormap, VectorVertexColormap, HashVertexColormap,
+        vertex_colormap_requirement, setindex!, getindex,
+
         # edge_list
         GenericEdgeList, EdgeList, simple_edgelist, edgelist,
 

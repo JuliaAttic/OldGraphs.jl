@@ -143,7 +143,39 @@ next(a::SourceIterator, s::Int) = ((e, s) = next(a.lst, s); (source(e, a.g), s))
 
 #################################################
 #
-#  Edge Length Visitors
+#  Vertex Property Inspectors
+#
+################################################
+
+abstract AbstractVertexPropertyInspector{T}
+
+vertex_property_requirement{T, V}(visitor::AbstractVertexPropertyInspector{T}, g::AbstractGraph{V}) = nothing
+
+type ConstantVertexPropertyInspector{T} <: AbstractVertexPropertyInspector{T}
+  value::T
+end
+
+vertex_property{T}(visitor::ConstantVertexPropertyInspector{T}, v, g) = visitor.value
+
+type VectorVertexPropertyInspector{T} <: AbstractVertexPropertyInspector{T}
+    values::Vector{T}
+end
+
+vertex_property{T,V}(visitor::VectorVertexPropertyInspector{T}, v::V,
+                   g::AbstractGraph{V})= visitor.values[vertex_index(v,g)]
+
+vertex_property_requirement{T, V}(visitor::VectorVertexPropertyInspector{T}, g::AbstractGraph{V}) = @graph_requires g vertex_map
+
+
+type FunctionVertexPropertyInspector{T} <: AbstractVertexPropertyInspector{T}
+  f::Function
+end
+
+vertex_property{T}(visitor::FunctionVertexPropertyInspector{T}, v, g) = visitor.f(v)
+
+#################################################
+#
+#  Edge Property Inspectors
 #
 ################################################
 
@@ -164,7 +196,7 @@ end
 
 edge_property{T,V}(visitor::VectorEdgePropertyInspector{T}, e, g::AbstractGraph{V}) = visitor.values[edge_index(e, g)]
 
-edge_property_requirement{T, V}(visitor::AbstractEdgePropertyInspector{T}, g::AbstractGraph{V}) = @graph_requires g edge_map
+edge_property_requirement{T, V}(visitor::VectorEdgePropertyInspector{T}, g::AbstractGraph{V}) = @graph_requires g edge_map
 
 type AttributeEdgePropertyInspector{T} <: AbstractEdgePropertyInspector{T}
   attribute::UTF8String
@@ -173,6 +205,41 @@ end
 function edge_property{T}(visitor::AttributeEdgePropertyInspector{T},edge::ExEdge, g)
     convert(T,edge.attributes[visitor.attribute])
 end
+
+#################################################
+#
+#  vertex colormap
+#
+################################################
+
+abstract AbstractVertexColormap{T}
+
+vertex_colormap_requirement{T, V}(color::AbstractVertexColormap{T}, 
+                                  g::AbstractGraph{V}) = nothing
+
+type VectorVertexColormap{T} <: AbstractVertexColormap{T}
+    values::Vector{T}
+end
+
+vertex_colormap_requirement{T, V}(color::VectorVertexColormap{T}, 
+                                 g::AbstractGraph{V}) = @graph_requires g vertex_map
+
+getindex{T,V}(color::VectorVertexColormap{T},
+              v::V, g::AbstractGraph{V}) = color.values[vertex_index(v,g)]
+
+setindex!{T,V}(color::VectorVertexColormap{T}, x::T,
+               v::V, g::AbstractGraph{V}) = color.values[vertex_index(v,g)]=x
+
+type HashVertexColormap{T, V} <: AbstractVertexColormap{T}
+    values::Dict{V,T}
+end
+
+getindex{T,V}(color::HashVertexColormap{T},
+         v::V, g::AbstractGraph{V}) = color.values[v,g]
+
+setindex!{T,V}(color::HashVertexColormap{T}, x::T,
+         v::V, g::AbstractGraph{V}) = color.values[v]=x
+
 #################################################
 #
 #  convenient functions

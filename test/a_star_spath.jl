@@ -46,3 +46,14 @@ end
 sp = shortest_path(g1, eweights1, 1, 2, n -> g1_heuristics[n])
 edge_numbers = map(e -> edge_index(e, g1), sp)
 @test edge_numbers == [2, 7, 15, 16]
+
+g2 = inclist(KeyVertex{Char})
+vs = [add_vertex!(g2, 'a'+i) for i = 0:19]
+for i = 1 : ne
+   we = g1_wedges[i]
+   add_edge!(g2, vs[we[1]], vs[we[2]])
+end
+
+sp2 = shortest_path(g2, VectorEdgePropertyInspector(eweights1), vs[1], vs[2], 
+         VectorVertexPropertyInspector(g1_heuristics))
+@test map(e -> edge_index(e, g2), sp2) == [2, 7, 15, 16]
