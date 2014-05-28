@@ -42,7 +42,7 @@ module Graphs
         vertex_property_requirement, vertex_property,
 
         AbstractVertexColormap, VectorVertexColormap, HashVertexColormap,
-        vertex_colormap_requirement, setindex!, getindex,
+        vertex_colormap_requirement,
 
         # edge_list
         GenericEdgeList, EdgeList, simple_edgelist, edgelist,
