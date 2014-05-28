@@ -61,7 +61,7 @@ function shortest_path{V,E,D,DH}(
     if implements_vertex_map(graph)
         colormap = VectorVertexColormap{Int}(zeros(Int, num_vertices(graph)))
     else
-        colormap = HashVertexColormap{Int}(Dict{V,Int}())
+        colormap = HashVertexColormap{Int}(DefaultDict{V,Int}(0))
     end
     colormap[s,graph] = 1
     a_star_impl!(graph, frontier, colormap, edge_dists, heuristic, t)
