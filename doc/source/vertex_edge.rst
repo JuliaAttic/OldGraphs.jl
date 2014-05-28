@@ -104,13 +104,13 @@ A custom edge type ``E{V}`` which is constructible by ``E(index::Int, s::V, t::V
 Vertex Properties
 ---------------
 
-Many algorithms use a property of an vertex such as amount of a
+Many algorithms use a property of a vertex such as amount of a
 resource provided or required by that vertex as input. As the
 algorithms do not mandate any structure for the vertex types, these
 vertex properties can be passed through to the algorithm by an
 ``VertexPropertyInspector``.  An ``VertexPropertyInspector`` when
-passed to the ``vertex_property`` method along with an vertex and a
-graph, will return that property of an vertex.
+passed to the ``vertex_property`` method along with a vertex and a
+graph, will return that property of a vertex.
 
 All vertex property inspectors should be declared as a subtype of
 ``AbstractVertexPropertyInspector{T}`` where ``T`` is the type of the
@@ -131,14 +131,14 @@ Three vertex property inspectors are provided
 ``ConstantVertexPropertyInspector``, ``VectorVertexPropertyInspector`` and
 ``AttributeVertexPropertyInspector``.
 
-``ConstantVertexPropertyInspector(c)`` constructs an vertex property
+``ConstantVertexPropertyInspector(c)`` constructs a vertex property
 inspector that returns the constant ``c`` for each vertex.
 
-``VectorVertexPropertyInspector(vec)`` constructs an vertex property
+``VectorVertexPropertyInspector(vec)`` constructs a vertex property
 inspector that returns ``vec[vertex_index(v, g)]``.  It requires that
 ``g`` implement the ``vertex_map`` interface.
 
-``FunctionVertexPropertyInspector(func)``  constructs an vertex property
+``FunctionVertexPropertyInspector(func)``  constructs a vertex property
 inspector that returns the result of ``func(v)`` from an ``ExVertex``.
 ``AttributeVertexPropertyInspector`` requires that the graph implements
 the ``vertex_map`` interface.
