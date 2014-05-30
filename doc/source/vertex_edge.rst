@@ -106,12 +106,12 @@ Vertex Properties
 
 Many algorithms use a property of a vertex such as amount of a
 resource provided or required by that vertex as input. These are
-communicated to the code through the following functions:
+communicated to the code through the following methods:
 
 .. py::function:: vertex_property(i, v, g)
 Returns the property of vertex ``v`` in graph ``g``.
 
-.. py::function:: vertex_property_requirement(i, v, g)
+.. py::function:: vertex_property_requirement(i, g)
 Checks that the graph ``g`` supports the interfaces necessary to 
 access the vertex property.
 
@@ -119,80 +119,53 @@ access the vertex property.
 Returns the type returned by ``vertex_property`` in graph ``g``.
 
 In all of these ``i`` is a type that indicates how the property is to
-be obtained.  The following example implementations are provided
+be obtained, both by influencing whish method is chosen and providing
+information to that method.  The following example implementations are provided:
 
-``Number``:  If ``i`` is a ``Number`` then
+``Number``:  If ``i`` is a ``Number`` then each vertex is given that
+value.
 
-All vertex property inspectors should be declared as a subtype of
-``AbstractVertexPropertyInspector{T}`` where ``T`` is the type of the
-vertex property.  The vertex propery inspector should respond to the
-following methods.
+``AbstractVector``:  If ``i`` is an ``AbstractVector`` then each
+vertex ``v`` has value ``i[vertex_index(v,g)]``.
 
-.. py::function:: vertex_property(i, e, g)
+``UTF8String``:  If ``i`` is an ``UTF8String`` and ``v`` is an
+``ExVertex`` then the the vertex has value ``v.attributes[i]``.
 
-  returns the vertex property of vertex ``v`` in graph ``g`` selected by
-  inspector ``i``.
-
-.. py::function:: vertex_property_requirement(i, g)
-
-  checks that graph ``g`` implements the interface(s) necessary for
-  inspector ``i``
-
-Three vertex property inspectors are provided
-``ConstantVertexPropertyInspector``, ``VectorVertexPropertyInspector`` and
-``AttributeVertexPropertyInspector``.
-
-``ConstantVertexPropertyInspector(c)`` constructs a vertex property
-inspector that returns the constant ``c`` for each vertex.
-
-``VectorVertexPropertyInspector(vec)`` constructs a vertex property
-inspector that returns ``vec[vertex_index(v, g)]``.  It requires that
-``g`` implement the ``vertex_map`` interface.
-
-``FunctionVertexPropertyInspector(func)``  constructs a vertex property
-inspector that returns the result of ``func(v)`` from an ``ExVertex``.
-``AttributeVertexPropertyInspector`` requires that the graph implements
-the ``vertex_map`` interface.
+``Function``:  If ``i`` is a ``Function`` then ``v`` has value ``i(v)``.
 
 
 
 Edge Properties
 ---------------
 
+
 Many algorithms use a property of an edge such as length, weight,
 flow, etc. as input. As the algorithms do not mandate any structure
-for the edge types, these edge properties can be passed through to the
-algorithm by an ``EdgePropertyInspector``.  An
-``EdgePropertyInspector`` when passed to the ``edge_property`` method
-along with an edge and a graph, will return that property of an edge.
-
-All edge property inspectors should be declared as a subtype of
-``AbstractEdgePropertyInspector{T}`` where ``T`` is the type of the
-edge property.  The edge propery inspector should respond to the
-following methods.
+for the edge types, these edge properties are
+communicated to the code through the following methods (analogous to
+the vertex meghods:
 
 .. py::function:: edge_property(i, e, g)
-
-  returns the edge property of edge ``e`` in graph ``g`` selected by
-  inspector ``i``.
+Returns the property of edge ``e`` in graph ``g``.
 
 .. py::function:: edge_property_requirement(i, g)
+Checks that the graph ``g`` supports the interfaces necessary to 
+access the edge property.
 
-  checks that graph ``g`` implements the interface(s) necessary for
-  inspector ``i``
+.. py::function:: vertex_property_type(i, g)
+Returns the type returned by ``edge_property`` in graph ``g``.
 
-Three edge property inspectors are provided
-``ConstantEdgePropertyInspector``, ``VectorEdgePropertyInspector`` and
-``AttributeEdgePropertyInspector``.
+In all of these ``i`` is a type that indicates how the property is to
+be obtained, both by influencing whish method is chosen and providing
+information to that method.  The following example implementations are provided:
 
-``ConstantEdgePropertyInspector(c)`` constructs an edge property
-inspector that returns the constant ``c`` for each edge.
+``Number``:  If ``i`` is a ``Number`` then each edge is given that
+value.
 
-``VectorEdgePropertyInspector(v)`` constructs an edge property
-inspector that returns ``v[edge_index(e, g)]``.  It requires that
-``g`` implement the ``edge_map`` interface.
+``AbstractVector``:  If ``i`` is an ``AbstractVector`` then each
+edge ``e`` has value ``i[vertex_index(e,g)]``.
 
-``AttributeEdgePropertyInspector(name)``  constructs an edge property
-inspector that returns the named attribute from an ``ExEdge``.
-``AttributeEdgePropertyInspector`` requires that the graph implements
-the ``edge_map`` interface.
+``UTF8String``:  If ``i`` is an ``UTF8String`` and ``e`` is an
+``ExEdge`` then the the vertex has value ``e.attributes[i]``.
+
+``Function``:  If ``i`` is a ``Function`` then ``e`` has value ``i(e)``.
