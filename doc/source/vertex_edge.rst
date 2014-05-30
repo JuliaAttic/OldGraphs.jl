@@ -119,7 +119,7 @@ access the vertex property.
 Returns the type returned by ``vertex_property`` in graph ``g``.
 
 In all of these ``i`` is a type that indicates how the property is to
-be obtained, both by influencing whish method is chosen and providing
+be obtained, both by influencing which method is chosen and providing
 information to that method.  The following example implementations are provided:
 
 ``Number``:  If ``i`` is a ``Number`` then each vertex is given that

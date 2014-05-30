@@ -149,7 +149,7 @@ next(a::SourceIterator, s::Int) = ((e, s) = next(a.lst, s); (source(e, a.g), s))
 
 #constant property
 vertex_property(x::Number, v, g) = x
-vertex_property_requirement(x, v, g) = none
+vertex_property_requirement(x, v, g) = nothing
 vertex_property_type{T<:Number}(x::T, v, g) = T
 
 #vector property
@@ -174,7 +174,7 @@ vertex_property_type(f::Function, g) = Float64
 
 #constant edge property
 edge_property(x::Number, e, g) = x
-edge_property_requirement(x, g) = none
+edge_property_requirement(x, g) = nothing
 edge_property_type{T<:Number}(x::T,g) = T
 
 #vector edge property
