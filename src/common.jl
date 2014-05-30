@@ -191,41 +191,6 @@ edge_property(f::Function, e, g) = f(e)
 edge_property_type(f::Function, g) = Float64
 
 
-
-#################################################
-#
-#  vertex colormap
-#
-################################################
-
-abstract AbstractVertexColormap{T}
-
-vertex_colormap_requirement{T, V}(color::AbstractVertexColormap{T}, 
-                                  g::AbstractGraph{V}) = nothing
-
-type VectorVertexColormap{T} <: AbstractVertexColormap{T}
-    values::Vector{T}
-end
-
-vertex_colormap_requirement{T, V}(color::VectorVertexColormap{T}, 
-                                 g::AbstractGraph{V}) = @graph_requires g vertex_map
-
-getindex{T,V}(color::VectorVertexColormap{T},
-              v::V, g::AbstractGraph{V}) = color.values[vertex_index(v,g)]
-
-setindex!{T,V}(color::VectorVertexColormap{T}, x::T,
-               v::V, g::AbstractGraph{V}) = color.values[vertex_index(v,g)]=x
-
-type HashVertexColormap{T, V} <: AbstractVertexColormap{T}
-    values::Dict{V,T}
-end
-
-getindex{T,V}(color::HashVertexColormap{T},
-         v::V, g::AbstractGraph{V}) = color.values[v,g]
-
-setindex!{T,V}(color::HashVertexColormap{T}, x::T,
-         v::V, g::AbstractGraph{V}) = color.values[v]=x
-
 #################################################
 #
 #  convenient functions
