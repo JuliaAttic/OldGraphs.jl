@@ -56,7 +56,7 @@ function shortest_path{V,E}(
     heuristic=0)
 
     # heuristic (under)estimating distance to target
-    D = edge_propety_type(edge_dists, graph)
+    D = edge_property_type(edge_dists, graph)
     frontier = PriorityQueue{(D,Array{E,1},V),D}()
     frontier[(zero(D), E[], s)] = zero(D)
     if implements_vertex_map(graph)
