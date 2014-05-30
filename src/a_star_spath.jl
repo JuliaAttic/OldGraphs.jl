@@ -17,12 +17,12 @@ using Base.Collections
 
 export shortest_path
 
-function a_star_impl!{V,D,DH}(
+function a_star_impl!{V}(
     graph::AbstractGraph{V},# the graph
     frontier,               # an initialized heap containing the active vertices
     colormap::AbstractVertexColormap{Int},  # an (initialized) color-map to indicate status of vertices
-    edge_dists::AbstractEdgePropertyInspector{D},  # cost of each edge
-    heuristic::AbstractVertexPropertyInspector{DH},    # heuristic fn (under)estimating distance to target
+    edge_dists,  # cost of each edge
+    heuristic,    # heuristic fn (under)estimating distance to target
     t::V)  # the end vertex
 
     while !isempty(frontier)
@@ -30,7 +30,7 @@ function a_star_impl!{V,D,DH}(
         if u == t
             return path
         end
-
+    
         for edge in out_edges(u, graph)
             v = target(edge)
             if colormap[v,graph] < 2
@@ -48,14 +48,15 @@ function a_star_impl!{V,D,DH}(
 end
 
 
-function shortest_path{V,E,D,DH}(
+function shortest_path{V,E}(
     graph::AbstractGraph{V,E},  # the graph
-    edge_dists::AbstractEdgePropertyInspector{D},      # cost of each edge
+    edge_dists,                 # cost of each edge
     s::V,                       # the start vertex
     t::V,                       # the end vertex
-    heuristic::AbstractVertexPropertyInspector{DH} = ConstantVertexPropertyInspector(0))
+    heuristic=0)
 
-            # heuristic (under)estimating distance to target
+    # heuristic (under)estimating distance to target
+    D = edge_propety_type(edge_dists, graph)
     frontier = PriorityQueue{(D,Array{E,1},V),D}()
     frontier[(zero(D), E[], s)] = zero(D)
     if implements_vertex_map(graph)
@@ -66,19 +67,6 @@ function shortest_path{V,E,D,DH}(
     colormap[s,graph] = 1
     a_star_impl!(graph, frontier, colormap, edge_dists, heuristic, t)
 end
-
-function shortest_path{V,E,D}(
-    graph::AbstractGraph{V,E},  # the graph
-    edge_dists::Vector{D},      # cost of each edge
-    s::V,                       # the start vertex
-    t::V,                       # the end vertex
-    fheuristic::Function = n -> 0)
-    edge_len::AbstractEdgePropertyInspector{D} = VectorEdgePropertyInspector(edge_dists)
-
-    heuristic = FunctionVertexPropertyInspector{D}(fheuristic)
-    shortest_path(graph, edge_len, s, t, heuristic)
-end
-
 
 end
 

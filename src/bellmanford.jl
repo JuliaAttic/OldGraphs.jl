@@ -25,7 +25,7 @@ end
 
 function bellman_ford_shortest_paths!{V,D}(
     graph::AbstractGraph{V},
-    edge_dists::AbstractEdgePropertyInspector{D}, 
+    edge_dists, 
     sources::AbstractVector{V},
     state::BellmanFordStates{V,D})
 
@@ -70,25 +70,19 @@ function bellman_ford_shortest_paths!{V,D}(
 end
 
 
-function bellman_ford_shortest_paths{V,D}(
+function bellman_ford_shortest_paths{V}(
     graph::AbstractGraph{V},
-    edge_dists::AbstractEdgePropertyInspector{D}, 
+    edge_dists, 
     sources::AbstractVector{V})
+    D = edge_property_type(edge_dists, graph)
     state = create_bellman_ford_states(graph, D)
     bellman_ford_shortest_paths!(graph, edge_dists, sources, state)
 end
 
-function bellman_ford_shortest_paths{V,D}(
-    graph::AbstractGraph{V},
-    edge_dists::Vector{D},
-    sources::AbstractVector{V})
-    edge_inspector = VectorEdgePropertyInspector{D}(edge_dists)
-    bellman_ford_shortest_paths(graph, edge_inspector, sources)
-end
 
-function has_negative_edge_cycle{V, D}(
+function has_negative_edge_cycle{V}(
     graph::AbstractGraph{V},
-    edge_dists::AbstractEdgePropertyInspector{D})
+    edge_dists)
     try
         bellman_ford_shortest_paths(graph, edge_dists, vertices(graph))
     catch e
@@ -99,9 +93,3 @@ function has_negative_edge_cycle{V, D}(
     return false
 end
 
-function has_negative_edge_cycle{V, D}(
-    graph::AbstractGraph{V},
-    edge_dists::Vector{D})
-    edge_inspector = VectorEdgePropertyInspector{D}(edge_dists)
-    has_negative_edge_cycle(graph, edge_inspector)
-end

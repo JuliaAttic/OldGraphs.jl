@@ -54,6 +54,5 @@ for i = 1 : ne
    add_edge!(g2, vs[we[1]], vs[we[2]])
 end
 
-sp2 = shortest_path(g2, VectorEdgePropertyInspector(eweights1), vs[1], vs[2], 
-         VectorVertexPropertyInspector(g1_heuristics))
+sp2 = shortest_path(g2, eweights1, vs[1], vs[2], g1_heuristics)
 @test map(e -> edge_index(e, g2), sp2) == [2, 7, 15, 16]

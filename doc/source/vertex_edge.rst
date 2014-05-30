@@ -105,12 +105,23 @@ Vertex Properties
 ---------------
 
 Many algorithms use a property of a vertex such as amount of a
-resource provided or required by that vertex as input. As the
-algorithms do not mandate any structure for the vertex types, these
-vertex properties can be passed through to the algorithm by an
-``VertexPropertyInspector``.  An ``VertexPropertyInspector`` when
-passed to the ``vertex_property`` method along with a vertex and a
-graph, will return that property of a vertex.
+resource provided or required by that vertex as input. These are
+communicated to the code through the following functions:
+
+.. py::function:: vertex_property(i, v, g)
+Returns the property of vertex ``v`` in graph ``g``.
+
+.. py::function:: vertex_property_requirement(i, v, g)
+Checks that the graph ``g`` supports the interfaces necessary to 
+access the vertex property.
+
+.. py::function:: vertex_property_type(i, g)
+Returns the type returned by ``vertex_property`` in graph ``g``.
+
+In all of these ``i`` is a type that indicates how the property is to
+be obtained.  The following example implementations are provided
+
+``Number``:  If ``i`` is a ``Number`` then
 
 All vertex property inspectors should be declared as a subtype of
 ``AbstractVertexPropertyInspector{T}`` where ``T`` is the type of the
