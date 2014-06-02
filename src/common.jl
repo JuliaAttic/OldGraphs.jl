@@ -157,15 +157,6 @@ vertex_property{V}(a::AbstractVector, v::V, g::AbstractGraph{V}) = a[vertex_inde
 vertex_property_requirement{V}(a::AbstractVector, g::AbstractGraph{V}) = @graph_requires g vertex_map
 vertex_property_type{T}(a::AbstractVector{T}, g::AbstractGraph) = T
 
-#attribute property
-vertex_property(a::UTF8String, v::ExVertex, g::AbstractGraph{ExVertex}) = convert(Float64,v.attributes[a])
-vertex_property_type(a::UTF8String, g::AbstractGraph{ExVertex}) = Float64
-
-#function property
-vertex_property(f::Function, v, g) = f(v)
-vertex_property_type(f::Function, g) = Float64
-
-
 #################################################
 #
 #  Edge Property Inspectors
@@ -181,15 +172,6 @@ edge_property_type{T<:Number}(x::T,g) = T
 edge_property{V,E}(a::AbstractVector, e::E, g::AbstractGraph{V,E}) = a[edge_index(e,g)]
 edge_property_requirement{V,E}(a::AbstractVector, g::AbstractGraph{V,E}) = @graph_requires g edge_map
 edge_property_type{T}(x::AbstractVector{T}, g::AbstractGraph) = T
-
-#attribute property
-edge_property(a::UTF8String, e::ExEdge, g::AbstractGraph) = convert(Float64,e.attributes[a])
-edge_property_type(a::UTF8String, g::AbstractGraph) = Float64
-
-#function property
-edge_property(f::Function, e, g) = f(e)
-edge_property_type(f::Function, g) = Float64
-
 
 #################################################
 #

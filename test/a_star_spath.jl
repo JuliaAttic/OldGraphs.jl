@@ -43,6 +43,12 @@ for i = 1 : ne
     eweights1[i] = we[3]
 end
 
+import Graphs.vertex_property
+import Graphs.vertex_property_type
+
+vertex_property(f::Function, v, g) = f(v)
+vertex_property_type(f::Function, g) = Float64
+
 sp = shortest_path(g1, eweights1, 1, 2, n -> g1_heuristics[n])
 edge_numbers = map(e -> edge_index(e, g1), sp)
 @test edge_numbers == [2, 7, 15, 16]
