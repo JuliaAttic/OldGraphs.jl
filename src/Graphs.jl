@@ -33,9 +33,11 @@ module Graphs
 
         add_edge!, add_vertex!, add_edges!, add_vertices!,
 
-        AbstractEdgePropertyInspector, VectorEdgePropertyInspector,
-        ConstantEdgePropertyInspector, AttributeEdgePropertyInspector,
-        edge_property, edge_property_requirement,
+        edge_property_requirement, edge_property, edge_property_type,
+        vertex_property_requirement, vertex_property, vertex_property_type,
+
+        AbstractVertexColormap, VectorVertexColormap, HashVertexColormap,
+        vertex_colormap_requirement,
 
         # edge_list
         GenericEdgeList, EdgeList, simple_edgelist, edgelist,

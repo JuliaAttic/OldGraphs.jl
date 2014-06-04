@@ -154,36 +154,36 @@ next(a::SourceIterator, s::Int) = ((e, s) = next(a.lst, s); (source(e, a.g), s))
 
 #################################################
 #
-#  Edge Length Visitors
+#  Vertex Property Inspectors
 #
 ################################################
 
-abstract AbstractEdgePropertyInspector{T}
+#constant property
+vertex_property(x::Number, v, g) = x
+vertex_property_requirement(x, v, g) = nothing
+vertex_property_type{T<:Number}(x::T, v, g) = T
 
-edge_property_requirement{T, V}(visitor::AbstractEdgePropertyInspector{T}, g::AbstractGraph{V}) = nothing
+#vector property
+vertex_property{V}(a::AbstractVector, v::V, g::AbstractGraph{V}) = a[vertex_index(v,g)]
+vertex_property_requirement{V}(a::AbstractVector, g::AbstractGraph{V}) = @graph_requires g vertex_map
+vertex_property_type{T}(a::AbstractVector{T}, g::AbstractGraph) = T
 
-type ConstantEdgePropertyInspector{T} <: AbstractEdgePropertyInspector{T}
-  value::T
-end
+#################################################
+#
+#  Edge Property Inspectors
+#
+################################################
 
-edge_property{T}(visitor::ConstantEdgePropertyInspector{T}, e, g) = visitor.value
+#constant edge property
+edge_property(x::Number, e, g) = x
+edge_property_requirement(x, g) = nothing
+edge_property_type{T<:Number}(x::T,g) = T
 
+#vector edge property
+edge_property{V,E}(a::AbstractVector, e::E, g::AbstractGraph{V,E}) = a[edge_index(e,g)]
+edge_property_requirement{V,E}(a::AbstractVector, g::AbstractGraph{V,E}) = @graph_requires g edge_map
+edge_property_type{T}(x::AbstractVector{T}, g::AbstractGraph) = T
 
-type VectorEdgePropertyInspector{T} <: AbstractEdgePropertyInspector{T}
-  values::Vector{T}
-end
-
-edge_property{T,V}(visitor::VectorEdgePropertyInspector{T}, e, g::AbstractGraph{V}) = visitor.values[edge_index(e, g)]
-
-edge_property_requirement{T, V}(visitor::AbstractEdgePropertyInspector{T}, g::AbstractGraph{V}) = @graph_requires g edge_map
-
-type AttributeEdgePropertyInspector{T} <: AbstractEdgePropertyInspector{T}
-  attribute::UTF8String
-end
-
-function edge_property{T}(visitor::AttributeEdgePropertyInspector{T},edge::ExEdge, g)
-    convert(T,edge.attributes[visitor.attribute])
-end
 #################################################
 #
 #  convenient functions
@@ -223,10 +223,10 @@ end
 
 isless{E,W}(a::WeightedEdge{E,W}, b::WeightedEdge{E,W}) = a.weight < b.weight
 
-function collect_weighted_edges{V,E,W}(graph::AbstractGraph{V,E}, weights::AbstractEdgePropertyInspector{W})
+function collect_weighted_edges{V,E}(graph::AbstractGraph{V,E}, weights)
 
     edge_property_requirement(weights, graph)
-
+    W = edge_property_type(weights, graph)
     wedges = Array(WeightedEdge{E,W}, 0)
     sizehint(wedges, num_edges(graph))
 
@@ -250,7 +250,3 @@ function collect_weighted_edges{V,E,W}(graph::AbstractGraph{V,E}, weights::Abstr
     return wedges
 end
 
-function collect_weighted_edges{V,E,W}(graph::AbstractGraph{V,E}, weights::AbstractVector{W})
-    visitor::AbstractEdgePropertyInspector{D} = VectorEdgePropertyInspector(edge_dists)
-    collect_weighted_edges(graph, visitor)
-end

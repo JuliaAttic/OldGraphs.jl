@@ -43,6 +43,22 @@ for i = 1 : ne
     eweights1[i] = we[3]
 end
 
+import Graphs.vertex_property
+import Graphs.vertex_property_type
+
+vertex_property(f::Function, v, g) = f(v)
+vertex_property_type(f::Function, g) = Float64
+
 sp = shortest_path(g1, eweights1, 1, 2, n -> g1_heuristics[n])
 edge_numbers = map(e -> edge_index(e, g1), sp)
 @test edge_numbers == [2, 7, 15, 16]
+
+g2 = inclist(KeyVertex{Char})
+vs = [add_vertex!(g2, 'a'+i) for i = 0:19]
+for i = 1 : ne
+   we = g1_wedges[i]
+   add_edge!(g2, vs[we[1]], vs[we[2]])
+end
+
+sp2 = shortest_path(g2, eweights1, vs[1], vs[2], g1_heuristics)
+@test map(e -> edge_index(e, g2), sp2) == [2, 7, 15, 16]

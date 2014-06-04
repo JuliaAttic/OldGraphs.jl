@@ -123,7 +123,7 @@ end
 
 function process_neighbors!{V,E,W,Heap,H}(
     graph::AbstractGraph{V,E},          # the graph
-    edge_weights::AbstractEdgePropertyInspector{W},            # weights associated with edges
+    edge_weights,                      # weights associated with edges
     visitor::AbstractPrimVisitor,       # visitor object
     u::V,                               # the vertex whose neighbor to be examined
     state::PrimStates{V,W,Heap,H})      # the states (created)
@@ -164,10 +164,10 @@ end
 
 function prim_minimum_spantree!{V,E,W,Heap,H}(
     graph::AbstractGraph{V,E},          # the graph
-    edge_weights::AbstractEdgePropertyInspector{W},            # weights associated with edges
+    edge_weights,                       # weights associated with edges
     root::V,                            # the root vertex
     visitor::AbstractPrimVisitor,       # visitor object
-    state::PrimStates{V,W,Heap,H})        # the states (created)
+    state::PrimStates{V,W,Heap,H})      # the states (created)
 
     @graph_requires graph vertex_map incidence_list
 
@@ -207,22 +207,21 @@ end
 
 function prim_minimum_spantree{V,E,W}(
     graph::AbstractGraph{V,E},
-    edge_weight_vec::Vector{W},
+    edge_weights::Vector{W},
     root::V)
 
     state = create_prim_states(graph, W)
     visitor = default_prim_visitor(graph, W)
-    edge_weights = VectorEdgePropertyInspector(edge_weight_vec)
     prim_minimum_spantree!(graph, edge_weights, root, visitor, state)
     return (visitor.edges, visitor.weights)
 end
 
 
-function prim_minimum_spantree{V,E,W}(
+function prim_minimum_spantree{V,E}(
     graph::AbstractGraph{V,E},
-    edge_weights::AbstractEdgePropertyInspector{W},
+    edge_weights,
     root::V)
-
+    W = edge_property_type(edge_weights, graph)
     state = create_prim_states(graph, W)
     visitor = default_prim_visitor(graph, W)
     prim_minimum_spantree!(graph, edge_weights, root, visitor, state)
@@ -231,12 +230,11 @@ end
 
 function prim_minimum_spantree_withlog{V,E,W}(
     graph::AbstractGraph{V,E},
-    edge_weight_vec::Vector{W},
+    edge_weights::Vector{W},
     root::V)
 
     state = create_prim_states(graph, W)
     visitor = LogPrimVisitor(STDOUT)
-    edge_weights = VectorEdgePropertyInspector(edge_weight_vec)
     prim_minimum_spantree!(graph, edge_weights, root, visitor, state)
 end
 

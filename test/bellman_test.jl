@@ -2,6 +2,11 @@
 
 using Graphs
 using Base.Test
+import Graphs.edge_property
+import Graphs.edge_property_type
+import Graphs.source
+import Graphs.target
+import Graphs.edge_index
 
 # g1: the example in CLRS (2nd Ed.)
 g1 = simple_inclist(5)
@@ -42,9 +47,9 @@ immutable MyEdge{V}
     target::V
     dist::Float64
 end
-Graphs.target{V}(e::MyEdge{V}, g::AbstractGraph{V}) = e.target
-Graphs.source{V}(e::MyEdge{V}, g::AbstractGraph{V}) = e.source
-Graphs.edge_index(e::MyEdge) = e.index
+target{V}(e::MyEdge{V}, g::AbstractGraph{V}) = e.target
+source{V}(e::MyEdge{V}, g::AbstractGraph{V}) = e.source
+edge_index(e::MyEdge) = e.index
 g2 = inclist([i for i=1:10], MyEdge{Int})
 
 for i = 2:10
@@ -56,17 +61,19 @@ for i = 2:10
     end
 end
 
-type MyEdgePropertyInspector{T} <: AbstractEdgePropertyInspector{T} end
+type MyEdgeInspector
+end
 
-Graphs.edge_property{T,V}(inspector::MyEdgePropertyInspector{T}, e::MyEdge, g::AbstractGraph{V}) = e.dist
-insp =  MyEdgePropertyInspector{Float64}()
-s2 = bellman_ford_shortest_paths(g2, insp, [1])
+Graphs.edge_property(x::MyEdgeInspector, e::MyEdge, g::AbstractGraph) = e.dist
+Graphs.edge_property_type(x::MyEdgeInspector, g::AbstractGraph) = Float64
+
+s2 = bellman_ford_shortest_paths(g2, MyEdgeInspector(), [1])
 @test s2.dists == [i * 1.0 for i=0:9]
 @test s2.parents == [i ==0 ? 1 : i for i = 0:9]
-@test !has_negative_edge_cycle(g2, insp)
+@test !has_negative_edge_cycle(g2, MyEdgeInspector())
 add_edge!(g2, MyEdge{Int}(46, 10, 1, -10.0))
-@test has_negative_edge_cycle(g2, insp)
-@test_throws NegativeCycleError bellman_ford_shortest_paths(g2, insp, [1])
+@test has_negative_edge_cycle(g2, MyEdgeInspector())
+@test_throws NegativeCycleError bellman_ford_shortest_paths(g2, MyEdgeInspector(), [1])
 
 # g1: the example in CLR[~S] (1st Ed. Figure 25.7)
 g3 = simple_inclist(5)

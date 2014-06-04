@@ -51,8 +51,14 @@ for (i,v) in enumerate(g1_wedges)
     add_edge!(g1ex, ed)
 end
 
-edgel = AttributeEdgePropertyInspector{Float64}("length")
-s1ex = dijkstra_shortest_paths(g1ex, edgel, [1])
+import Graphs.edge_property
+import Graphs.edge_property_type
+
+edge_property(a::UTF8String, e::ExEdge, g::AbstractGraph) = convert(Float64,e.attributes[a])
+edge_property_type(a::UTF8String, g::AbstractGraph) = Float64
+
+
+s1ex = dijkstra_shortest_paths(g1ex, convert(UTF8String,"length"), [1])
 
 @test s1ex.parents == [1, 3, 1, 2, 3]
 @test s1ex.dists == [0., 8., 5., 9., 7.]

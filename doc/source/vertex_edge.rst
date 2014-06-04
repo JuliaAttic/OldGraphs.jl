@@ -101,43 +101,111 @@ Both edge types implement the following methods:
 
 A custom edge type ``E{V}`` which is constructible by ``E(index::Int, s::V, t::V)`` and implements the above methods is usable in the ``VectorIncidenceList`` parametric type.  Construct such a list with ``inclist(V,E{V})``, where E and V are your vertex and edge types.  See test/inclist.jl for an example.
 
+Properties
+--------
+
+In order to link real world problems to the graph algorithms we need
+to assign properties such as weight, length, flow color, etc. to the
+vertices or edges.   There are many ways to assign properties to the 
+vertices and edges, but the algorithms should not have to worry about
+how to access the property.
+
+In order to communicate the properties to the algorithm we pass an
+object ``i`` that tells the algorithm how to get the data.  The
+algorithm then calls ``vertex_property(i, v, g)`` or
+``edge_property(i, e, g)``  to get the value of the property. The
+julia dispatcher uses the type of ``i`` along with the edge or vertex
+and graph types to determine the appropriate method to call. 
+
+Vertex Properties
+---------------
+
+Many algorithms use a property of a vertex such as amount of a
+resource provided or required by that vertex as input. These are
+communicated to the code through the following methods:
+
+.. py::function:: vertex_property(i, v, g)
+Returns the property of vertex ``v`` in graph ``g``.
+
+.. py::function:: vertex_property_requirement(i, g)
+Checks that the graph ``g`` supports the interfaces necessary to 
+access the vertex property.
+
+.. py::function:: vertex_property_type(i, g)
+Returns the type returned by ``vertex_property`` in graph ``g``.
+
+In all of these ``i`` is a type that indicates how the property is to
+be obtained, both by influencing which method is chosen and providing
+information to that method.  The following example implementations are provided:
+
+``Number``:  If ``i`` is a ``Number`` then each vertex is given that
+value.
+
+``AbstractVector``:  If ``i`` is an ``AbstractVector`` then each
+vertex ``v`` has value ``i[vertex_index(v,g)]``.
+
+If some other method is desired you can overload the
+``vertex_property`` and ``vertex_property_type`` functions.
+
+For example, if your vertex type looked like
+```
+type MyVertex
+index::Int
+name::ASCIIString
+production::Float64
+capacity::Float64
+```
+and you want to pass the production field to an algorithm.  First you
+would declare a type for the julia dispatcher to key on (you could
+use an existing type, but would probably confuse someone reading the
+code.)
+```
+type ProductionInspector
+end
+```
+and provide implementations of ``vertex_property`` and
+``vertex_property_type`` (``vertex_property_requirement`` defaults to
+``nothing`` and since we have no requirements, we can leave it as is.)
+```
+import Graphs: vertex_property, vertex_property_type
+
+vertex_property(i::ProductionInspector,v::MyVertex,g::AbstractGraph)=v.production
+vertex_property_type(i::ProductionInspector,v::MyVertex,g::AbstractGraph)=Float64
+```
+and then pass an instance of ``ProductionInspector`` to the
+algorithm.  The julia optimizer seems to do a good job of optimizing
+away all of the dispatching logic.
+
+
+
+
 Edge Properties
 ---------------
 
+
 Many algorithms use a property of an edge such as length, weight,
 flow, etc. as input. As the algorithms do not mandate any structure
-for the edge types, these edge properties can be passed through to the
-algorithm by an ``EdgePropertyInspector``.  An
-``EdgePropertyInspector`` when passed to the ``edge_property`` method
-along with an edge and a graph, will return that property of an edge.
-
-All edge property inspectors should be declared as a subtype of
-``AbstractEdgePropertyInspector{T}`` where ``T`` is the type of the
-edge property.  The edge propery inspector should respond to the
-following methods.
+for the edge types, these edge properties are
+communicated to the code through the following methods (analogous to
+the vertex meghods:
 
 .. py::function:: edge_property(i, e, g)
-
-  returns the edge property of edge ``e`` in graph ``g`` selected by
-  inspector ``i``.
+Returns the property of edge ``e`` in graph ``g``.
 
 .. py::function:: edge_property_requirement(i, g)
+Checks that the graph ``g`` supports the interfaces necessary to 
+access the edge property.
 
-  checks that graph ``g`` implements the interface(s) necessary for
-  inspector ``i``
+.. py::function:: vertex_property_type(i, g)
+Returns the type returned by ``edge_property`` in graph ``g``.
 
-Three edge property inspectors are provided
-``ConstantEdgePropertyInspector``, ``VectorEdgePropertyInspector`` and
-``AttributeEdgePropertyInspector``.
+In all of these ``i`` is a type that indicates how the property is to
+be obtained, both by influencing whish method is chosen and providing
+information to that method.  The following example implementations are provided:
 
-``ConstantEdgePropertyInspector(c)`` constructs an edge property
-inspector that returns the constant ``c`` for each edge.
+``Number``:  If ``i`` is a ``Number`` then each edge is given that
+value.
 
-``VectorEdgePropertyInspector(v)`` constructs an edge property
-inspector that returns ``v[edge_index(e, g)]``.  It requires that
-``g`` implement the ``edge_map`` interface.
+``AbstractVector``:  If ``i`` is an ``AbstractVector`` then each
+edge ``e`` has value ``i[vertex_index(e,g)]``.
 
-``AttributeEdgePropertyInspector(name)``  constructs an edge property
-inspector that returns the named attribute from an ``ExEdge``.
-``AttributeEdgePropertyInspector`` requires that the graph implements
-the ``edge_map`` interface.
