@@ -101,6 +101,22 @@ Both edge types implement the following methods:
 
 A custom edge type ``E{V}`` which is constructible by ``E(index::Int, s::V, t::V)`` and implements the above methods is usable in the ``VectorIncidenceList`` parametric type.  Construct such a list with ``inclist(V,E{V})``, where E and V are your vertex and edge types.  See test/inclist.jl for an example.
 
+Properties
+--------
+
+In order to link real world problems to the graph algorithms we need
+to assign properties such as weight, length, flow color, etc. to the
+vertices or edges.   There are many ways to assign properties to the 
+vertices and edges, but the algorithms should not have to worry about
+how to access the property.
+
+In order to communicate the properties to the algorithm we pass an
+object ``i`` that tells the algorithm how to get the data.  The
+algorithm then calls ``vertex_property(i, v, g)`` or
+``edge_property(i, e, g)``  to get the value of the property. The
+julia dispatcher uses the type of ``i`` along with the edge or vertex
+and graph types to determine the appropriate method to call. 
+
 Vertex Properties
 ---------------
 
@@ -128,10 +144,38 @@ value.
 ``AbstractVector``:  If ``i`` is an ``AbstractVector`` then each
 vertex ``v`` has value ``i[vertex_index(v,g)]``.
 
-``UTF8String``:  If ``i`` is an ``UTF8String`` and ``v`` is an
-``ExVertex`` then the the vertex has value ``v.attributes[i]``.
+If some other method is desired you can overload the
+``vertex_property`` and ``vertex_property_type`` functions.
 
-``Function``:  If ``i`` is a ``Function`` then ``v`` has value ``i(v)``.
+For example, if your vertex type looked like
+```
+type MyVertex
+index::Int
+name::ASCIIString
+production::Float64
+capacity::Float64
+```
+and you want to pass the production field to an algorithm.  First you
+would declare a type for the julia dispatcher to key on (you could
+use an existing type, but would probably confuse someone reading the
+code.)
+```
+type ProductionInspector
+end
+```
+and provide implementations of ``vertex_property`` and
+``vertex_property_type`` (``vertex_property_requirement`` defaults to
+``nothing`` and since we have no requirements, we can leave it as is.)
+```
+import Graphs: vertex_property, vertex_property_type
+
+vertex_property(i::ProductionInspector,v::MyVertex,g::AbstractGraph)=v.production
+vertex_property_type(i::ProductionInspector,v::MyVertex,g::AbstractGraph)=Float64
+```
+and then pass an instance of ``ProductionInspector`` to the
+algorithm.  The julia optimizer seems to do a good job of optimizing
+away all of the dispatching logic.
+
 
 
 
@@ -165,7 +209,3 @@ value.
 ``AbstractVector``:  If ``i`` is an ``AbstractVector`` then each
 edge ``e`` has value ``i[vertex_index(e,g)]``.
 
-``UTF8String``:  If ``i`` is an ``UTF8String`` and ``e`` is an
-``ExEdge`` then the the vertex has value ``e.attributes[i]``.
-
-``Function``:  If ``i`` is a ``Function`` then ``e`` has value ``i(e)``.
