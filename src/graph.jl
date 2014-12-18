@@ -66,6 +66,9 @@ in_edges{V}(v::V, g::GenericGraph{V}) = g.binclist[vertex_index(v, g)]
 in_degree{V}(v::V, g::GenericGraph{V}) = length(in_edges(v, g))
 in_neighbors{V}(v::V, g::GenericGraph{V}) = SourceIterator(g, in_edges(v, g))
 
+# convenience measures
+order(g::GenericGraph) = num_vertices(g)
+size(g::GenericGraph) = num_edges(g)
 
 # mutation
 

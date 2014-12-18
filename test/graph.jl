@@ -28,8 +28,8 @@ sgd = simple_graph(4)
 # properties
 
 @test is_directed(sgd) == true
-@test num_vertices(sgd) == 4
-@test num_edges(sgd) == 0
+@test num_vertices(sgd) == order(sgd) == 4
+@test num_edges(sgd) == size(sgd) == 0
 
 for u = 1 : 4
     @test out_degree(u, sgd) == 0
@@ -47,7 +47,7 @@ es = [  add_edge!(sgd, 1, 2)
         add_edge!(sgd, 2, 4)
         add_edge!(sgd, 3, 4) ]
 
-@test num_edges(sgd) == 4
+@test num_edges(sgd) == size(sgd) == 4
 
 # outgoing
 
@@ -88,8 +88,8 @@ es = [  add_edge!(sgd, 1, 2)
 sgu = simple_graph(4, is_directed=false)
 
 @test is_directed(sgu) == false
-@test num_vertices(sgu) == 4
-@test num_edges(sgu) == 0
+@test num_vertices(sgu) == order(sgu) == 4
+@test num_edges(sgu) == size(sgu) == 0
 
 for u = 1 : 4
     @test out_degree(u, sgu) == 0
@@ -106,7 +106,7 @@ add_edge!(sgu, 4, 1)
 es = sgu.edges
 rs = [revedge(e) for e in es]
 
-@test num_edges(sgu) == 5
+@test num_edges(sgu) == size(sgu) == 5
 
 # outgoing
 
@@ -156,8 +156,8 @@ for T in [ExVertex, ASCIIString]
     end
     vs = vertices(egd)
 
-    @test num_vertices(egd) == 4
-    @test num_edges(egd) == 0
+    @test num_vertices(egd) == order(egd) == 4
+    @test num_edges(egd) == size(egd) == 0
 
     add_edge!(egd, vs[1], vs[2])
     add_edge!(egd, vs[1], vs[3])
@@ -165,7 +165,7 @@ for T in [ExVertex, ASCIIString]
     add_edge!(egd, vs[3], vs[4])
     es = edges(egd)
 
-    @test num_edges(egd) == 4
+    @test num_edges(egd) == size(egd) == 4
 
     # outgoing
 
@@ -213,8 +213,8 @@ for T in [ExVertex, ASCIIString]
     end
     vs = vertices(egu)
 
-    @test num_vertices(egu) == 4
-    @test num_edges(egu) == 0
+    @test num_vertices(egu) == order(egu) == 4
+    @test num_edges(egu) == size(egu) == 0
 
     add_edge!(egu, vs[1], vs[2])
     add_edge!(egu, vs[1], vs[3])
@@ -223,7 +223,7 @@ for T in [ExVertex, ASCIIString]
     es = edges(egu)
     rs = [revedge(e) for e in es]
 
-    @test num_edges(egu) == 4
+    @test num_edges(egu) == size(egu) == 4
 
     # outgoing
 
@@ -264,5 +264,5 @@ end
 v = [ExVertex(1,""),ExVertex(2,"")]
 e = [ExEdge(1,v[1],v[2])]
 g = graph(v,e,is_directed=true)
-@test num_edges(g) == 1
-@test num_vertices(g) == 2
+@test num_edges(g) == size(g) == 1
+@test num_vertices(g) == order(g) == 2

@@ -23,7 +23,7 @@ module Graphs
         make_vertex, make_edge,
         vertex_type, edge_type, source, target, revedge,
         is_directed, is_mutable, vertex_index, edge_index,
-        num_vertices, vertices, num_edges, edges,
+        num_vertices, order, vertices, num_edges, edges,
         out_degree, out_neighbors, out_edges,
         in_degree, in_neighbors, in_edges,
         attributes,
