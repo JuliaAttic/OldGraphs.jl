@@ -55,7 +55,7 @@ vertices(g::GenericGraph) = g.vertices
 num_edges(g::GenericGraph) = length(g.edges)
 edges(g::GenericGraph) = g.edges
 
-vertex_index{V<:ProvidedVertexType}(v::V, g::GenericGraph{V}) = vertex_index(v)
+vertex_index{V<:ProvidedVertexType}(v::V, g::GenericGraph{V}) = vertex_index(v,vertices(g))
 edge_index{V,E}(e::E, g::GenericGraph{V,E}) = edge_index(e)
 
 out_edges{V}(v::V, g::GenericGraph{V}) = g.finclist[vertex_index(v, g)]
