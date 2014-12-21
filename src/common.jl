@@ -8,8 +8,6 @@ typealias AttributeDict Dict{UTF8String, Any}
 #
 ################################################
 
-vertex_index(v::Integer) = v
-
 immutable KeyVertex{K}
     index::Int
     key::K
