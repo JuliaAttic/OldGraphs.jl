@@ -102,7 +102,10 @@ module Graphs
         to_dot, plot,
 
         # Random Graph Generation
-        erdos_renyi_graph, watts_strogatz_graph
+        erdos_renyi_graph, watts_strogatz_graph,
+
+	# Centrality measures
+	degree_centrality
 
     include("concepts.jl")
     include("common.jl")
@@ -130,4 +133,5 @@ module Graphs
     include("dot.jl")
 
     include("random.jl")
+    include("centrality.jl")
 end

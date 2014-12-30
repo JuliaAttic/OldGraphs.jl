@@ -8,14 +8,15 @@ Contents
 ---------
 .. toctree::
    :maxdepth: 2
-   
+
    overview.rst
    interface.rst
    vertex_edge.rst
    graphs.rst
    algorithms.rst
    matrix.rst
-   
+   centrality.rst
+
 
 
 Indices and tables
@@ -26,4 +27,3 @@ Indices and tables
 
 
 .. _Boost Graph Library: http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/index.html
-
