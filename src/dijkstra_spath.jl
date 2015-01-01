@@ -254,16 +254,15 @@ dijkstra_shortest_paths{V}(
     graph::AbstractGraph{V}, s::V
 ) = dijkstra_shortest_paths(graph, ones(num_vertices(graph)), s)
 
-function dijkstra_shortest_paths_explicit{V}(g::AbstractGraph{V},source::V, all...)
-    state = dijkstra_shortest_paths(g, source, all...)
+function enumerate_paths{V,D,Heap,H}(state::DijkstraStates{V,D,Heap,H}, dest::Vector{V})
     parents = state.parents
     hasparent = state.hasparent
     
-    nstates = length(parents)
-    all_paths = Array(Vector{V},nstates)
-    for i in 1:nstates
+    num_dest = length(dest)
+    all_paths = Array(Vector{V},num_dest)
+    for i=1:num_dest
         all_paths[i] = V[]
-        child_index = i
+        child_index = dest[i]
         if hasparent[child_index]
             parent_index = parents[child_index]
             while child_index != parent_index
@@ -277,3 +276,6 @@ function dijkstra_shortest_paths_explicit{V}(g::AbstractGraph{V},source::V, all.
     end
     all_paths
 end
+
+enumerate_paths{V,D,Heap,H}(state::DijkstraStates{V,D,Heap,H}, dest) = enumerate_paths(state, [dest])[1]
+enumerate_paths{V,D,Heap,H}(state::DijkstraStates{V,D,Heap,H}) = enumerate_paths(state, [1:length(state.parents)])
