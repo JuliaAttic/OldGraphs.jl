@@ -113,6 +113,19 @@ s2 = dijkstra_shortest_paths(g2, eweights2, [1])
 
 g3 = simple_graph(4)
 add_edge!(g3,1,2); add_edge!(g3,1,3); add_edge!(g3,2,3); add_edge!(g3,3,4)
-sps = dijkstra_shortest_paths_explicit(g3,2)
-@test length(sps[1]) == 0
-@test sps[4][2] == 3
+
+s3 = dijkstra_shortest_paths(g3,2)
+sps = enumerate_paths(s3)
+@test length(sps) == 4
+@test sps[1] == []
+@test sps[2] == [2]
+@test sps[3] == [2, 3]
+@test sps[4] == [2, 3, 4]
+
+sps = enumerate_paths(s3, [2,4])
+@test length(sps) == 2
+@test sps[1] == [2]
+@test sps[2] == [2, 3, 4]
+
+sps = enumerate_paths(s3, 4)
+@test sps == [2, 3, 4]
