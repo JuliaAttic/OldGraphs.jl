@@ -29,11 +29,12 @@ end
 @assert num_vertices(g1) == 5
 @assert num_edges(g1) == 10
 
-s1 = dijkstra_shortest_paths(g1, eweights1, 1)
+s1 = dijkstra_shortest_paths(g1, eweights1, 1; all_paths=true)
 
 @test s1.parents == [1, 3, 1, 2, 3]
 @test s1.dists == [0., 8., 5., 9., 7.]
 @test s1.colormap == [2, 2, 2, 2, 2]
+@test s1.pathcounts == [1, 1, 1, 1, 1]
 
 s1 = dijkstra_shortest_paths(g1, eweights1, [1])
 
@@ -110,6 +111,9 @@ s2 = dijkstra_shortest_paths(g2, eweights2, [1])
 @test s2.parents == [1, 1, 1, 3, 6, 3]
 @test s2.dists == [0., 7., 9., 20., 20., 11.]
 @test s2.colormap == [2, 2, 2, 2, 2, 2]
+
+s22 = dijkstra_shortest_paths(g2, eweights2, 2; all_paths=true)
+@test s22.pathcounts == [1, 1, 1, 1, 2, 1]
 
 g3 = simple_graph(4)
 add_edge!(g3,1,2); add_edge!(g3,1,3); add_edge!(g3,2,3); add_edge!(g3,3,4); add_edge!(g3,4,3); add_edge!(g3,3,1)
