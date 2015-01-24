@@ -1,5 +1,6 @@
 module Graphs
     using DataStructures
+    using Compat
 
     import Base: start, done, next, show, ==
     import Base: length, isempty, size, getindex, isless
