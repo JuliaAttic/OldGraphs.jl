@@ -110,7 +110,8 @@ end
 
 function examine_neighbor!(vis::TarjanVisitor, v, w, w_color::Int, e_color::Int)
     if w_color > 0 # if we've seen this vertex already
-        while vis.index[vertex_index(w, vis.graph)] < vis.lowlink[end]
+        vi = vis.index[vertex-index(w, vis.graph)]
+        while vi > 0 && vi < vis.lowlink[end]
             pop!(vis.lowlink)
         end
     end
