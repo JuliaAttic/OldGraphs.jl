@@ -71,6 +71,9 @@ export
     # maximum_adjacency_visit
     MaximumAdjacency, AbstractMASVisitor, min_cut, maximum_adjacency_visit,
 
+    # edmonds_karp
+    min_st_cut, max_flow,
+
     # connected_components
     connected_components, strongly_connected_components,
 
@@ -136,6 +139,7 @@ include("breadth_first_visit.jl")
 include("depth_first_visit.jl")
 include("maximum_adjacency_visit.jl")
 
+include("edmonds_karp.jl")
 include("connected_components.jl")
 include("dijkstra_spath.jl")
 include("bellmanford.jl")

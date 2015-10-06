@@ -19,7 +19,8 @@ tests = [
     "cliques",
     "random",
     "generators",
-    "maximum_adjacency_visit" ]
+    "maximum_adjacency_visit",
+    "edmonds_karp"]
 
 
 for t in tests
