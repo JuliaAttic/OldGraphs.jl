@@ -30,7 +30,7 @@ function to_dot{G<:AbstractGraph}(graph::G, stream::IO,attrs::AttributeDict=Attr
             write(stream,"$(vertex_index(vtx,graph))$attrs\n")
         end
         for edge in edges(graph)
-            write(stream,"$(vertex_index(source(edge), graph)) $(edge_op(graph)) $(vertex_index(target(edge), graph))\n")
+            write(stream,"$(vertex_index(source(edge), graph)) $(edge_op(graph)) $(vertex_index(target(edge), graph))$(has_edge_attrs ? string(" ", to_dot(attributes(edge, graph))) : "")\n")
         end
     elseif implements_vertex_list(graph) && (implements_incidence_list(graph) || implements_adjacency_list(graph))
         for vertex in vertices(graph)

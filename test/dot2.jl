@@ -5,6 +5,9 @@
 #   2) there are vertex attributes to be shown in .dot
 #   3) the graph verifies implements_edge_list(.) == true 
 #      and                implements_vertex_map(.) == true 
+#   4) there are edges attributes to be shown in .dot
+#      and the graph verifies implements_edge_list(.) == true 
+#      and                   implements_vertex_map(.) == true 
 
 
 # These functions help with dealing with the fact that in two equivalent
@@ -148,5 +151,29 @@ println(dot4)
 
 @test Main.check_same_dot(dot4,"graph graphname {\n1\t[\"label\"=\"a\",\"color\"=\"bisque\"]\n2\t[\"label\"=\"b\",\"color\"=\"bisque\"]\n3\t[\"label\"=\"c\",\"color\"=\"bisque\"]\n4\t[\"label\"=\"d\",\"color\"=\"bisque\"]\n1 -- 3\n2 -- 3\n}\n"
 )
+
+### 5) undirected graph with node attributes and edge attributes and some disconnected vertices
+
+
+agu = Graphs.graph( map( MyVtxType,[ "a", "b", "c","d"]), Graphs.ExEdge{MyVtxType}[],
+                      is_directed=false)
+
+vl = agu.vertices
+    
+add_edge!(agu, vl[1], vl[3] )
+add_edge!(agu,  vl[2], vl[3])
+
+agu.edges[1].attributes["color"] = "red"
+agu.edges[2].attributes["color"] = "blue"
+
+dot5=to_dot(agu)
+println(dot5)
+
+@test @show implements_edge_list(agu)==true
+@test @show implements_vertex_map(agu)==true
+
+@test Main.check_same_dot(dot5,"graph graphname {\n1\t[\"label\"=\"a\",\"color\"=\"bisque\"]\n2\t[\"label\"=\"b\",\"color\"=\"bisque\"]\n3\t[\"label\"=\"c\",\"color\"=\"bisque\"]\n4\t[\"label\"=\"d\",\"color\"=\"bisque\"]\n1 -- 3 [\"color\"=\"red\"]\n2 -- 3 [\"color\"=\"blue\"]\n}\n"
+)
+
 
 end # module testDOT2
