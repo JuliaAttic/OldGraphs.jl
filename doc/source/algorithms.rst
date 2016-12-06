@@ -9,7 +9,7 @@ Graph Algorithms
 - topological sorting
 - shortest paths: Dijkstra, Floyd-Warshall, A*
 - minimum spanning trees: Prim, Kruskal
-- flow: Minimum Cut
+- flow: Minimum s-t Cut, Maximum Flow, Simple Minimum Cut
 - random graph generation
 - more algorithms are being implemented
 
@@ -342,10 +342,33 @@ Kruskal's algorithm finds a minimum spanning tree (or forest) by gradually uniti
 Flow
 -----------------------
 
-This package implements Simple Minimum Cut
+This package implements Minimum s-t Cut, Maximum Flow, and Simple Minimum Cut
+
+
+Minimum s-t Cut
+~~~~~~~~~~~~~~~
+
+The minimum cut that separates vertex s and vertex t. 
+
+.. py:function:: min_st_cut(graph, capacity)
+
+    :param graph:       the input graph
+    :param capacity:    the edge capacities (vector of floats)
+
+    :returns:   ``(parity, bestcut)``, where ``parity`` is a vector of boolean values that determines the partition and ``bestcut`` is the weight of the cut that makes this partition.
+
+Maximum Flow
+~~~~~~~~~~~~
+
+.. py:function:: max_flow(graph, capacity)
+
+    :param graph:       the input graph
+    :param capacity:    the edge capacities (vector of floats)
+
+    :returns:   ``maxflow``, where ``maxflow`` is the maximum flow of the network. 
 
 Simple Minimum Cut
-~~~~~~~~~~~~~~~~~
+~~~~~~~~~~~~~~~~~~
 
 Stoer's simple minimum cut gets the minimum cut of an undirected graph.
 
