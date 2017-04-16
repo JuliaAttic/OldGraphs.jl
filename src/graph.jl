@@ -110,6 +110,7 @@ function add_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V, e::E)
 
     if !g.is_directed
         rev_e = revedge(e)
+        push!(g.edges, rev_e)
         push!(g.finclist[vi], rev_e)
         push!(g.binclist[ui], rev_e)
     end
