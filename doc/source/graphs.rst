@@ -374,7 +374,7 @@ Specifically, it implements the following methods:
     
 .. py:function:: out_edges(v, g)
 
-    returns the number of outgoing edges from vertex ``v`` in graph ``g``.
+    returns the outgoing edges from vertex ``v`` in graph ``g``.
     
 .. py:function:: out_neighbors(v, g)
 
