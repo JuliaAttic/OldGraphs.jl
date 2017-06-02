@@ -93,7 +93,7 @@ The following example prints all vertices of a graph as well as its neighbors
     for u in vertices(g)
         print("$u: ")
         for v in out_neighbors(u, g)
-            println("$v ")
+            print("$v ")
         end
         println()
     end
