@@ -82,6 +82,7 @@ end
 ExEdge{V}(i::Int, s::V, t::V) = ExEdge{V}(i, s, t, AttributeDict())
 ExEdge{V}(i::Int, s::V, t::V, attrs::AttributeDict) = ExEdge{V}(i, s, t, attrs)
 make_edge{V}(g::AbstractGraph{V}, s::V, t::V) = ExEdge(num_edges(g) + 1, s, t)
+make_edge{V}(g::AbstractGraph{V}, s::V, t::V, dict::AttributeDict) = ExEdge(num_edges(g) + 1, s, t, dict)
 
 revedge{V}(e::ExEdge{V}) = ExEdge{V}(e.index, e.target, e.source, e.attributes)
 
