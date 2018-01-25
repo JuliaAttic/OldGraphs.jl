@@ -118,3 +118,4 @@ end
 
 add_edge!{V,E}(g::GenericGraph{V,E}, e::E) = add_edge!(g, source(e, g), target(e, g), e)
 add_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V) = add_edge!(g, u, v, make_edge(g, u, v))
+add_edge!{V,E}(g::GenericGraph{V,E}, u::V, v::V, dict::AttributeDict) = add_edge!(g, u, v, make_edge(g, u, v, dict))
