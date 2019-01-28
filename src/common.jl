@@ -20,13 +20,15 @@ end
 make_vertex(g::AbstractGraph{V}, key) where {V<:KeyVertex} = V(num_vertices(g) + 1, key)
 vertex_index(v::KeyVertex) = v.index
 
-mutable struct ExVertex
-    index::Int
+mutable struct ExVertex{T}
+    index::T
     label::String
     attributes::AttributeDict
 
-    ExVertex(i::Int, label::AbstractString) = new(i, label, AttributeDict())
+    ExVertex{T}(i::T, label::AS) where {T <: Union{Int, Symbol}, AS <: AbstractString} = new{T}(i, label, AttributeDict())
 end
+
+ExVertex(i::T, label::AS) where {T, AS} = ExVertex{T}(i, label)
 
 make_vertex(g::AbstractGraph{ExVertex}, label::AbstractString) = ExVertex(num_vertices(g) + 1, String(label))
 vertex_index(v::ExVertex) = v.index

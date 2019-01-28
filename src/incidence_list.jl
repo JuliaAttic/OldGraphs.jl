@@ -39,6 +39,9 @@ incdict(vs::Dict{Int,V}, ::Type{E}; is_directed::Bool = true) where {V,E} =
     IncidenceDict{V,E}(is_directed, vs, 0, Dict{Int, E}())
 incdict(::Type{V}; is_directed::Bool = true) where {V} = incdict(Dict{Int,V}(), Edge{V}; is_directed=is_directed)
 
+incdict(vs::Dict{Symbol,V}, ::Type{E}; is_directed::Bool = true) where {V,E} =
+    IncidenceDict{V,E}(is_directed, vs, 0, Dict{Symbol, E}())
+
 
 # required interfaces
 
@@ -99,6 +102,14 @@ function add_vertex!(vertices::Vector{V}, inclist::Vector{E}, v::V) where {V,E}
     v
 end
 function add_vertex!(vertices::Dict{Int, V}, inclist::Dict{Int,E}, v::V) where {V,E}
+  if haskey(vertices, v.index)
+    error("Already have index $(v.index) in g")
+  end
+  vertices[v.index] = v
+  inclist[v.index] = Array{E}(undef, 0)
+  v
+end
+function add_vertex!(vertices::Dict{Symbol, V}, inclist::Dict{Symbol,E}, v::V) where {V,E}
   if haskey(vertices, v.index)
     error("Already have index $(v.index) in g")
   end
