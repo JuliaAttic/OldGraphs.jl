@@ -97,6 +97,9 @@ export
     # a_star_spath
     shortest_path,
 
+    # a_star_visitor_light
+    astar_light_shortest_path_implicit,
+
     # prim_mst
     PrimStates, create_prim_states, AbstractPrimVisitor,
     prim_minimum_spantree!, prim_minimum_spantree, prim_minimum_spantree_withlog,
@@ -146,6 +149,7 @@ include("connected_components.jl")
 include("dijkstra_spath.jl")
 include("bellmanford.jl")
 include("a_star_spath.jl")
+include("astar_visitor_light.jl")
 include("prim_mst.jl")
 include("kruskal_mst.jl")
 include("floyd_warshall.jl")
