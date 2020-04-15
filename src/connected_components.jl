@@ -109,8 +109,9 @@ function discover_vertex!(vis::TarjanVisitor, v)
 end
 
 function examine_neighbor!(vis::TarjanVisitor, v, w, w_color::Int, e_color::Int)
-    if w_color == 1 # 1 means added seen, but not explored
-        while vis.index[vertex_index(w, vis.graph)] < vis.lowlink[end]
+    if w_color > 0 # if we've seen this vertex already
+        vi = vis.index[vertex_index(w, vis.graph)]
+        while vi > 0 && vi < vis.lowlink[end]
             pop!(vis.lowlink)
         end
     end
