@@ -7,6 +7,9 @@
 [![Graphs](http://pkg.julialang.org/badges/Graphs_0.7.svg)](http://pkg.julialang.org/?pkg=Graphs&ver=0.7)
 [![Graphs](http://pkg.julialang.org/badges/Graphs_1.0.svg)](http://pkg.julialang.org/?pkg=Graphs&ver=1.0)
 
+This is an archived copy of the old Graphs.jl package, which is retained solely for the issues and pull-requests.
+The new repository for Graphs.jl is https://github.com/JuliaGraphs/Graphs.jl, which includes all the code from this repo along with the development history of LightGraphs, which was later renamed to Graphs and merged into that combined repository.
+
 Graphs.jl is a Julia package that provides graph types and algorithms. The design of this package is inspired by the [Boost Graph Library](http://www.boost.org/doc/libs/1_53_0/libs/graph/doc/index.html) (*e.g.* using standardized generic interfaces), while taking advantage of Julia's language features (*e.g.* multiple dispatch). This library allows storing of own information in the graph structure -- useful in many cases.
 
 **Note:** as of 2016, this package's original author is no longer actively maintaining it, but there are several active users in the community. We'll engage as best we can, and feel free to open issues here to improve this library. There is a sister library, [LightGraphs](https://github.com/JuliaGraphs/LightGraphs.jl), focused on a slightly different set of use cases.
